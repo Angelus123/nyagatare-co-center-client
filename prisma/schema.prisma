@@ -1,0 +1,295 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  email           String    @unique
+  firstName       String?
+  lastName        String?
+  password        String    @default("")
+  profileImageUrl String?
+  role            Role      @default(CLIENT)
+  isVerified      Boolean   @default(false)
+  lastLoginAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  orders          Order[]
+  productReviews  ProductReview[]
+  cartItems       CartItem[]
+  favorites       Favorite[]
+  addresses       UserAddress[]
+  
+  @@map("users")
+}
+
+model Product {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String    @unique
+  description String
+  price       Float
+  image       String
+  category    String
+  materials   String?
+  rating      Float
+  reviewCount Int       @default(0)
+  stock       Int       @default(0)
+  isActive    Boolean   @default(true)
+  tags        String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  orderItems    OrderItem[]
+  productReviews ProductReview[]
+  cartItems     CartItem[]
+  
+  @@map("products")
+}
+
+model Artwork {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  artist      String
+  price       Float
+  status      ArtworkStatus @default(AVAILABLE)
+  category    String
+  medium      String
+  views       Int           @default(0)
+  likes       Int           @default(0)
+  featured    Boolean       @default(false)
+  description String?
+  imageUrl    String?
+  dimensions  String?
+  tags        String[]
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  favorites   Favorite[]
+  
+  @@unique([title, artist])
+  @@index([category])
+  @@index([status])
+  @@index([featured])
+  @@index([createdAt])
+  @@index([artist])
+  @@map("artworks")
+}
+
+model Category {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String   @unique
+  displayName  String
+  description  String
+  image        String
+  icon         String
+  productCount Int      @default(0)
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  
+  @@map("categories")
+}
+
+model Order {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber  String        @unique
+  userId       String        @db.ObjectId
+  status       OrderStatus   @default(PENDING)
+  totalAmount  Float
+  shippingFee  Float         @default(0)
+  taxAmount    Float         @default(0)
+  customerNote String?
+  
+  // Embedded addresses for orders (since they should be snapshots)
+  shippingFullName   String
+  shippingStreet     String
+  shippingCity       String
+  shippingState      String
+  shippingPostalCode String
+  shippingCountry    String   @default("US")
+  shippingPhone      String?
+  
+  billingFullName   String
+  billingStreet     String
+  billingCity       String
+  billingState      String
+  billingPostalCode String
+  billingCountry    String   @default("US")
+  
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  paidAt       DateTime?
+  deliveredAt  DateTime?
+  
+  // Relations
+  user       User      @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+  payments   Payment[]
+  
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String   @db.ObjectId
+  productId String   @db.ObjectId
+  quantity  Int      @default(1)
+  price     Float
+  subtotal  Float
+  
+  // Relations
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  
+  @@map("order_items")
+}
+
+model CartItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+  
+  // Relations
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+model ProductReview {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  rating    Int      // 1-5
+  comment   String?
+  isApproved Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  
+  @@unique([userId, productId])
+  @@map("product_reviews")
+}
+
+model Favorite {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String   @db.ObjectId
+  artworkId String  @db.ObjectId
+  
+  // Relations
+  user   User   @relation(fields: [userId], references: [id])
+  artwork Artwork @relation(fields: [artworkId], references: [id])
+  
+  @@unique([userId, artworkId])
+  @@map("favorites")
+}
+
+model Payment {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  orderId      String        @db.ObjectId
+  amount       Float
+  paymentMethod PaymentMethod
+  status       PaymentStatus @default(PENDING)
+  transactionId String?
+  paymentDate  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  // Relations
+  order Order @relation(fields: [orderId], references: [id])
+  
+  @@map("payments")
+}
+
+model UserAddress {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
+  type         AddressType // SHIPPING or BILLING
+  firstName    String
+  lastName     String
+  street       String
+  city         String
+  state        String
+  postalCode   String
+  country      String   @default("US")
+  phone        String?
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("user_addresses")
+}
+
+// Embedded type for product/artwork dimensions
+type Dimensions {
+  width  Float
+  height Float
+  depth  Float?
+  unit   String @default("inches")
+}
+
+// ============ ENUMS ============
+
+enum Role {
+  ADMIN
+  CLIENT
+  MANAGER
+  OPERATOR
+}
+
+enum ArtworkStatus {
+  AVAILABLE
+  SOLD
+  RESERVED
+  COMMISSIONED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  PAYPAL
+  BANK_TRANSFER
+  STRIPE
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum AddressType {
+  SHIPPING
+  BILLING
+}
