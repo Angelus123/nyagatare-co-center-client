@@ -1,279 +1,199 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import Image from 'next/image';
-import { useCart } from '../context/CartContext';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Instagram, Facebook, Linkedin } from "lucide-react";
 
-interface NavbarProps {
-  isScrolled: boolean;
-}
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Our Services", href: "/services" },
+  { label: "Contact Us", href: "/contact" },
+];
 
-export default function Navbar({ isScrolled }: NavbarProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { cart } = useCart();
-  const pathname = usePathname();
+export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 60);
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/shop', label: 'Shop' },
-    { href: '/categories', label: 'Categories' },
-    { href: '/artworks', label: 'Artworks' },
-    { href: '/gallery', label: 'Gallery' },
-    { href: '/contact', label: 'Contact Us' },
-    { href: '/login', label: 'Login' }
-  ];
-
-  const mainCategories = [
-    'Jewelry & Accessories',
-    'Home Decor',
-    'Painting & Drawing',
-    'Wood & Metal',
-    'Fashion & Textiles',
-    'Craft Supplies',
-    'Paper Crafts',
-    'Kids & Toys',
-    'Seasonal & Gifts'
-  ];
-
-  const subCategories = [
-    'Offers', 'New In', 'Best Sold', 'Inspiration', 'Ideas',
-    'Stores', 'Workshops', 'Carts', 'Papercraft', 'Orders', 
-  ];
-
-  // Check if current path is cart page
-  const isCartPage = pathname === '/cart';
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  // Lock body scroll while menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   return (
-    <>
-      {/* Top Banner */}
-      <div
-        className={`bg-amber-600 text-white text-center py-2 text-sm font-medium transition-all duration-300 ${
-          isScrolled ? 'hidden' : 'block'
+    <header className="fixed top-4 sm:top-6 left-0 w-full z-50 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20">
+      <motion.div
+        initial={false}
+        animate={{
+          paddingLeft: isScrolled ? 32 : 0,
+          paddingRight: isScrolled ? 32 : 0,
+          paddingTop: isScrolled ? 18 : 10,
+          paddingBottom: isScrolled ? 18 : 10,
+        }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className={`w-full rounded-full text-white flex items-center justify-between transition-colors duration-500 ${
+          isScrolled ? "bg-[#8a2b2b] shadow-lg" : "bg-transparent"
         }`}
       >
-        Buy more, save more! Get $5 off $20 or $10 off $40 with code{' '}
-        <span className="font-bold">INSIGHT</span>
-      </div>
-
-      {/* Header */}
-      <header
-        className={`fixed w-full z-30 transition-all duration-300 ${
-          isScrolled ? 'bg-white shadow-md py-1' : 'bg-white py-2'
-        }`}
-      >
-        <div className="container mx-auto px-4 max-w-7xl">
-          {/* Top Row */}
-          <div className="relative flex items-center justify-between">
-            {/* LEFT: Logo (mobile leftmost, centered on desktop) */}
-            <div className="flex-shrink-0">
-              <Link href="/" aria-label="Home" className="flex items-center">
-                <Image
-                  src="/images/logo/logo.png"
-                  alt="Insight Art Space Logo"
-                  width={220}
-                  height={70}
-                  className="w-auto h-12 sm:h-14 md:h-16 transition-transform hover:scale-105"
-                  priority
-                />
-              </Link>
-            </div>
-
-            {/* CENTER: Search (hidden on mobile), CART (mobile center) */}
-            <div className="flex-1 flex justify-center items-center">
-              {/* Search Bar on Desktop/Tablet */}
-              <div className="hidden md:flex w-full max-w-md relative">
-                <input
-                  type="text"
-                  placeholder="Search products or Categories..."
-                  className="w-full pl-10 pr-4 py-1.5 border text-gray-500 border-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-
-              {/* Cart (always visible, centered on mobile) */}
-              <div className="relative md:ml-6 flex justify-center md:justify-end">
-                <Link
-                  href="/cart"
-                  className={`p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-full ${
-                    isCartPage 
-                      ? 'text-amber-700 bg-amber-50' 
-                      : 'text-gray-700 hover:text-amber-700'
-                  }`}
-                  aria-label={`Cart (${cartCount})`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                  </svg>
-                </Link>
-                {cartCount > 0 && (
-                  <span className={`absolute -top-1 -right-1 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] ${
-                    isCartPage ? 'bg-amber-600' : 'bg-amber-500'
-                  } animate-pulse`}>
-                    {cartCount}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* RIGHT: Hamburger Menu (mobile rightmost) + Nav (desktop) */}
-            <div className="flex items-center space-x-4">
-              {/* Desktop Navigation */}
-              <div className="hidden lg:flex items-center space-x-5 text-sm">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`transition-colors ${
-                      pathname === link.href
-                        ? 'text-amber-700 underline underline-offset-4'
-                        : 'text-gray-700 hover:text-amber-700'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-
-              {/* Mobile Hamburger */}
-              <button
-                className="lg:hidden p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500"
-                onClick={toggleMobileMenu}
-                aria-label="Toggle mobile menu"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  {isMobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-            </div>
+        {/* Logo / Brand */}
+        <Link href="/" className="flex items-center gap-2">
+          <div className="leading-tight hidden sm:block">
+            <p className="font-serif text-sm sm:text-base tracking-wide">BASHANA</p>
+            <p className="text-[9px] tracking-[0.15em] text-white/70">COMPANIES</p>
           </div>
+        </Link>
 
-          {/* Category Bars */}
-          {!isScrolled && (
-            <>
-              <nav className="hidden md:flex justify-center overflow-x-auto py-2 border-t border-b border-gray-200">
-                <div className="flex space-x-4 px-2 min-w-max">
-                  {mainCategories.map((cat) => (
-                    <Link
-                      key={cat}
-                      href={`/categories/${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="text-xs sm:text-sm text-gray-700 hover:text-amber-700 font-medium px-2 whitespace-nowrap"
-                    >
-                      {cat}
-                    </Link>
-                  ))}
-                </div>
-              </nav>
-              <nav className="hidden md:flex justify-center overflow-x-auto py-1">
-                <div className="flex space-x-3 px-2 min-w-max">
-                  {subCategories.map((cat) => (
-                    <Link
-                      key={cat}
-                      href={`/categories/${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="text-xs text-gray-600 hover:text-amber-700 px-1 whitespace-nowrap"
-                    >
-                      {cat}
-                    </Link>
-                  ))}
-                </div>
-              </nav>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Dropdown */}
-        <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${
-            isMobileMenuOpen ? 'max-h-[80vh] opacity-100' : 'max-h-0 opacity-0'
-          } bg-white border-t`}
+        {/* Menu Button */}
+        <button
+          aria-label="Toggle menu"
+          onClick={() => setMenuOpen(true)}
+          className="flex flex-col gap-[5px] p-2"
         >
-          <nav className="flex flex-col p-4 space-y-4">
-            {/* Main Links */}
-            <div>
-              <h3 className="font-semibold text-gray-900 text-sm mb-2">Navigation</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`block py-2 px-3 text-sm rounded-lg ${
-                      pathname === link.href
-                        ? 'text-amber-700 font-semibold bg-amber-50'
-                        : 'text-gray-700 hover:text-amber-700 hover:bg-gray-50'
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                {/* Cart link for mobile menu */}
-                <Link
-                  href="/cart"
-                  className={`block py-2 px-3 text-sm rounded-lg ${
-                    isCartPage
-                      ? 'text-amber-700 font-semibold bg-amber-50'
-                      : 'text-gray-700 hover:text-amber-700 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
+          <span className="block w-6 h-[2px] bg-white" />
+          <span className="block w-6 h-[2px] bg-white" />
+          <span className="block w-6 h-[2px] bg-white" />
+        </button>
+      </motion.div>
+
+      {/* Full-screen overlay menu - slides in from right */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/40 z-40"
+              onClick={() => setMenuOpen(false)}
+            />
+
+            {/* Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#7a1f1f] z-50 overflow-hidden flex flex-col"
+            >
+              {/* Watermark logo graphic, bottom-right */}
+              <div className="absolute -bottom-16 -right-16 w-80 h-80 opacity-10 pointer-events-none">
+                <Image
+                  src="/logo-white.svg"
+                  alt=""
+                  fill
+                  className="object-contain"
+                />
+              </div>
+
+              {/* Top bar: logo + close */}
+              <div className="flex items-center justify-between px-6 sm:px-8 pt-6 pb-4">
+                <div className="relative w-10 h-10">
+                  <Image
+                    src="/logo-white.svg"
+                    alt="Bashana Companies"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+
+                <button
+                  aria-label="Close menu"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-11 h-11 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
                 >
-                  Cart ({cartCount})
-                </Link>
+                  <X size={20} />
+                </button>
               </div>
-            </div>
 
-            {/* Categories */}
-            <div>
-              <h3 className="font-semibold text-gray-900 text-sm mb-2">Categories</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {mainCategories.map((cat) => (
-                  <Link
-                    key={cat}
-                    href={`/category/${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="block py-2 px-3 text-sm text-gray-700 hover:text-amber-700 hover:bg-gray-50 rounded-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
+              {/* Nav links - right aligned, large */}
+              <nav className="flex-1 flex flex-col items-end justify-center gap-2 px-6 sm:px-10 relative z-10">
+                {navLinks.map((link, index) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.15 + index * 0.08, ease: "easeOut" }}
                   >
-                    {cat}
-                  </Link>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="text-4xl sm:text-5xl font-light text-white hover:text-white/70 transition-colors leading-tight"
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 ))}
-              </div>
-            </div>
-          </nav>
-        </div>
-      </header>
+              </nav>
 
-      {/* Spacer */}
-      <div className={`transition-all duration-300 ${isScrolled ? 'h-16' : 'h-28'}`} />
-    </>
+              {/* Divider */}
+              <div className="mx-6 sm:mx-8 h-px bg-white/20 relative z-10" />
+
+              {/* Bottom bar: socials + CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                className="flex items-center justify-between px-6 sm:px-8 py-6 relative z-10"
+              >
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                  >
+                    <Instagram size={16} />
+                  </a>
+                  <a
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                  >
+                    <Facebook size={16} />
+                  </a>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn"
+                    className="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                  >
+                    <Linkedin size={16} />
+                  </a>
+                </div>
+
+                <a
+                  href="https://wa.me/250700000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 rounded-full border border-white/50 text-white text-sm font-medium hover:bg-white/10 transition-colors"
+                >
+                  Chat With Us
+                </a>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }
