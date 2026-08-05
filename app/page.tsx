@@ -1,459 +1,509 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Inter, Playfair_Display } from 'next/font/google';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { ChevronDown, Users, Target, Heart, Shield, Star } from 'lucide-react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
-import { useCart } from './context/CartContext';
-
-// Define interfaces for data structures
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  description: string;
-  rating: number;
-  reviews: number;
-}
-
-interface Category {
-  name: string;
-  count: number;
-  image: string;
-  icon: string;
-}
-
-interface FormElements extends HTMLFormControlsCollection {
-  email: HTMLInputElement;
-}
-
-interface NewsletterForm extends HTMLFormElement {
-  readonly elements: FormElements;
-}
 
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400', '700'] });
 
+// Service data
+interface Service {
+  id: string;
+  title: string;
+  number: string;
+  description: string;
+  image: string;
+  category: string;
+}
+
+const services: Service[] = [
+  {
+    id: 'guest-house',
+    title: 'Guest House',
+    number: '01',
+    description: 'Comfortable and affordable accommodation with breathtaking views of the Rwandan countryside. Our guest house offers a peaceful retreat for travelers and business visitors alike.',
+    image: '/images/guest-house.jpg',
+    category: 'Hospitality',
+  },
+  {
+    id: 'cafe-restaurant',
+    title: 'Café & Restaurant',
+    number: '02',
+    description: 'Experience authentic African cuisine in a cozy atmosphere. Our café serves freshly brewed coffee, local dishes, and international favorites prepared with love.',
+    image: '/images/cafe.jpg',
+    category: 'Hospitality',
+  },
+  {
+    id: 'art-gallery',
+    title: 'Art Gallery',
+    number: '03',
+    description: 'Showcasing local artists and traditional masterpieces. Our gallery features imigongo art, paintings, sculptures, and contemporary works from Rwandan artists.',
+    image: '/images/art-gallery.jpg',
+    category: 'Art',
+  },
+  {
+    id: 'craft-shop',
+    title: 'Craft Shop',
+    number: '04',
+    description: 'Handmade crafts preserving cultural heritage. From woven baskets to pottery and jewelry, each piece tells a story of Rwandan craftsmanship and tradition.',
+    image: '/images/craft-shop.jpg',
+    category: 'Art',
+  },
+  {
+    id: 'farming',
+    title: 'Farming',
+    number: '05',
+    description: 'Sustainable agriculture empowering local communities. We practice eco-friendly farming methods and support local farmers with training and resources.',
+    image: '/images/farming.jpg',
+    category: 'Farming',
+  },
+];
+
+// Values data
+const valuesContent = [
+  "Team work, Hard-work, innovation, Humility are",
+  "some of our key values that keeps a healthy and",
+  "growing team"
+];
+
+// Icons for values
+const valueIcons = [
+  { icon: Users, label: 'Teamwork' },
+  { icon: Target, label: 'Hard-work' },
+  { icon: Star, label: 'Innovation' },
+  { icon: Heart, label: 'Humility' },
+];
+
 export default function Home() {
-  const { addToCart } = useCart();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  
+  const aboutSectionRef = useRef<HTMLElement>(null);
+  const valuesSectionRef = useRef<HTMLElement>(null);
+  const servicesSectionRef = useRef<HTMLElement>(null);
+  
+  const isAboutInView = useInView(aboutSectionRef, { once: false, amount: 0.2 });
+  const isValuesInView = useInView(valuesSectionRef, { once: false, amount: 0.2 });
+  const isServicesInView = useInView(servicesSectionRef, { once: false, amount: 0.2 });
 
-  // Enhanced featured products data
-  const featuredProducts: Product[] = [
-    {
-      id: 1,
-      name: 'Handcrafted Ceramic Vase',
-      price: 45.99,
-      image: '/images/ceramic-vase.jpg',
-      category: 'Pottery',
-      description: 'A beautifully glazed vase, handcrafted with traditional techniques.',
-      rating: 4.5,
-      reviews: 128
-    },
-    {
-      id: 2,
-      name: 'Traditional Embroidered Tapestry',
-      price: 32.50,
-      image: '/images/textiles.jpg',
-      category: 'Textiles',
-      description: 'Intricate patterns woven by skilled artisans.',
-      rating: 4.8,
-      reviews: 89
-    },
-    {
-      id: 3,
-      name: 'Wood Carved Figurine',
-      price: 67.00,
-      image: '/images/woodwork.jpg',
-      category: 'Woodwork',
-      description: 'A detailed carving inspired by cultural heritage.',
-      rating: 4.3,
-      reviews: 67
-    },
-    {
-      id: 4,
-      name: 'Handwoven Reed Basket',
-      price: 28.75,
-      image: '/images/basket.jpg',
-      category: 'Weaving',
-      description: 'A sturdy, eco-friendly basket for daily use.',
-      rating: 4.6,
-      reviews: 203
-    },
-    {
-      id: 5,
-      name: 'Silver Tribal Necklace',
-      price: 89.99,
-      image: '/images/jewelry.jpg',
-      category: 'Jewelry',
-      description: 'Handcrafted silver necklace with traditional motifs.',
-      rating: 4.9,
-      reviews: 156
-    },
-    {
-      id: 6,
-      name: 'Leather Handbag',
-      price: 120.00,
-      image: '/images/TKX00114.jpg',
-      category: 'Leatherwork',
-      description: 'Premium leather bag with intricate tooling.',
-      rating: 4.7,
-      reviews: 92
-    },
-    {
-      id: 7,
-      name: 'Hand-painted Ceramic Bowl Set',
-      price: 75.50,
-      image: '/images/TKX00188.jpg',
-      category: 'Pottery',
-      description: 'Set of 4 beautifully painted ceramic bowls.',
-      rating: 4.4,
-      reviews: 78
-    },
-    {
-      id: 8,
-      name: 'Wool Hand-knitted Scarf',
-      price: 42.25,
-      image: '/images/TKX00298.jpg',
-      category: 'Textiles',
-      description: 'Warm wool scarf with traditional patterns.',
-      rating: 4.8,
-      reviews: 134
-    }
+  // Text content with line breaks matching the image
+  const content = [
+    "At Bashana, we are innovating life in",
+    "Rural Africa - Creating jobs for the",
+    "youth and women",
+    "Here at Bashana we are focusing on ideas that will bring about positive changes",
+    "and sustainable development for the youth and women. Currently focused in three",
+    "main areas: Hospitality, Arts & Crafts and Farming."
   ];
 
-  const categories: Category[] = [
-    { name: 'Pottery', count: 24, image: '/images/pottery.jpg', icon: '🏺' },
-    { name: 'Textiles', count: 32, image: '/images/textiles.jpg', icon: '🧵' },
-    { name: 'Woodwork', count: 18, image: '/images/woodwork.jpg', icon: '🪵' },
-    { name: 'Jewelry', count: 29, image: '/images/jewelry.jpg', icon: '💍' },
-    { name: 'Leatherwork', count: 15, image: '/images/leather.jpg', icon: '👜' },
-    { name: 'Weaving', count: 21, image: '/images/basket.jpg', icon: '🧺' },
-    { name: 'Metalwork', count: 12, image: '/images/metalwork.jpg', icon: '⚒️' },
-    { name: 'Glasswork', count: 8, image: '/images/glasswork.jpg', icon: '🔮' },
-  ];
-
-  const filteredProducts = selectedCategory === 'all'
-    ? featuredProducts
-    : featuredProducts.filter(product => product.category === selectedCategory);
-
-  // Add scroll effect for header
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Basic cart functionality
-  const handleAddToCart = (product: Product): void => {
-    addToCart(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        description: product.description,
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
       },
-      1
-    );
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-    notification.textContent = `${product.name} added to cart!`;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-      document.body.removeChild(notification);
-    }, 3000);
+    },
   };
 
-  // Newsletter form handler
-  const handleNewsletterSubmit = (e: React.FormEvent<NewsletterForm>): void => {
-    e.preventDefault();
-    const email = e.currentTarget.elements.email.value;
-    if (email) {
-      const successMsg = document.createElement('div');
-      successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-      successMsg.textContent = 'Thank you for subscribing!';
-      document.body.appendChild(successMsg);
-
-      setTimeout(() => {
-        document.body.removeChild(successMsg);
-      }, 3000);
-
-      e.currentTarget.reset();
-    }
+  const itemVariants = {
+    hidden: { opacity: 0, x: 80 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
   };
 
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <svg
-            key={star}
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-4 w-4 ${star <= rating ? 'text-amber-400' : 'text-gray-300'}`}
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        ))}
-        <span className="ml-1 text-sm text-gray-600">({rating})</span>
-      </div>
-    );
+  const logoVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        delay: 0.3,
+      },
+    },
   };
+
+  // Values animation variants - upward transition
+  const valuesContainerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const valuesItemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  // Services animation variants
+  const servicesContainerVariants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const servicesItemVariants = {
+    hidden: { opacity: 0, x: 80 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const toggleService = (id: string) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
+
+  // Handle hover for dropdown
+  const handleMouseEnter = (id: string) => {
+    setExpandedId(id);
+    setHoveredId(id);
+  };
+
+  const handleMouseLeave = () => {
+    setExpandedId(null);
+    setHoveredId(null);
+  };
+
+  // Right content for services
+  const rightContent = [
+    "Hospitality, Art, Entertainment",
+    "Explore our work and engage with us though supporting our business or collaborating with us on our numerous ventures. Help us deliver more impact in Rural Africa."
+  ];
 
   return (
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
-
       {/* Sticky Header */}
       <Header isScrolled={isScrolled} />
 
       {/* Hero Section */}
       <Hero />
 
-      {/* Quick Category Navigation */}
-      <section className="py-8 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-center overflow-x-auto space-x-4 py-2 hide-scrollbar">
-            {categories.map((category) => (
-              <button
-                key={category.name}
-                onClick={() => setSelectedCategory(category.name)}
-                className={`flex flex-col items-center min-w-[80px] group ${selectedCategory === category.name ? 'text-amber-600' : 'text-gray-600'
-                  }`}
-              >
-                <div className={`text-2xl mb-2 p-3 rounded-full ${selectedCategory === category.name ? 'bg-amber-100' : 'bg-gray-100'
-                  } group-hover:bg-amber-50 transition-colors`}>
-                  {category.icon}
-                </div>
-                <span className="text-xs font-medium whitespace-nowrap">{category.name}</span>
-                <span className="text-xs text-gray-500">({category.count})</span>
-              </button>
-            ))}
-          </div>
+      {/* About Section - White Background */}
+      <section
+      
+      
+        ref={aboutSectionRef}
+        className="relative w-full min-h-screen py-20 px-6 sm:px-10 md:px-16 lg:px-24 overflow-hidden bg-white"
+      >
+        <h3 className='text-3xl sm:text-4xl md:text-xl text-[#800000] mb-7'>Hello, welcome to life in Rural Africa.</h3>
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 20% 50%, rgba(0,0,0,0.1) 0%, transparent 50%)`,
+          }} />
         </div>
-      </section>
 
-      {/* Featured Products Grid */}
-      <section className="py-8 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 py-2">
-            <h2 className={`${playfair.className} text-3xl font-bold text-gray-900 text-center sm:text-left`}>
-              Featured Products
-            </h2>
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-              <select
-                className="border border-gray-300 text-gray-600 cursor-pointer rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="all">All Categories</option>
-                {categories.map(category => (
-                  <option key={category.name} value={category.name}>
-                    {category.name} ({category.count})
-                  </option>
-                ))}
-              </select>
-              <Link
-                href="/shop"
-                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto text-center"
-              >
-                View All Products
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {filteredProducts.slice(0, 10).map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-lg border border-gray-200 hover:border-amber-300 hover:shadow-lg transition-all duration-300 group"
-              >
-                <Link href={`/artworks/${product.id}`}>
-                  <div className="relative aspect-square overflow-hidden rounded-t-lg">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute top-2 right-2">
-                      <button className="bg-white rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-amber-50">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 text-amber-600"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-xs text-gray-500 mb-1">{product.category}</p>
-                    <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-amber-700">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center justify-between mb-2">
-                      {renderStars(product.rating)}
-                      <span className="text-xs text-gray-500">({product.reviews})</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-amber-600">${product.price.toFixed(2)}</span>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleAddToCart(product);
-                        }}
-                        className="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Category Showcase */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className={`${playfair.className} text-3xl font-bold text-center mb-12 text-gray-900`}>
-            Shop By Category
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {categories.map((category, index) => (
-              <Link
-                key={category.name}
-                href={`/categories/${category.name.toLowerCase()}`}
-                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group"
-              >
-                <div className="aspect-video relative overflow-hidden">
-                  <div
-                    className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                    style={{ backgroundImage: `url(${category.image})` }}
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                    <h3 className="text-white font-semibold text-lg">{category.name}</h3>
-                    <p className="text-white/80 text-sm">{category.count} items</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Special Offers Banner */}
-      <section className="py-12 bg-gradient-to-r from-amber-500 to-amber-600">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className={`${playfair.className} text-3xl font-bold text-white mb-4`}>
-            Summer Sale - Up to 50% Off!
-          </h2>
-          <p className="text-amber-100 mb-6 text-lg">
-            Limited time offer on selected handmade crafts. Don&apos;t miss out!
-          </p>
-          <Link
-            href="/sale"
-            className="inline-block bg-white text-amber-600 px-8 py-3 rounded-lg font-semibold hover:bg-amber-50 transition-colors shadow-lg"
+        <div className="relative z-10 max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          <motion.div
+            variants={logoVariants}
+            initial="hidden"
+            animate={isAboutInView ? "visible" : "hidden"}
+            className="lg:w-1/3 flex justify-center"
           >
-            Shop Sale Items
-          </Link>
-        </div>
-      </section>
+            <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
+              <Image
+                src="/logo-black.svg"
+                alt="Bashana Companies"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </motion.div>
 
-      {/* Trust Indicators */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Quality Guarantee</h3>
-              <p className="text-gray-600 text-sm">30-day money back guarantee</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Free Shipping</h3>
-              <p className="text-gray-600 text-sm">On orders over $100</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Secure Payment</h3>
-              <p className="text-gray-600 text-sm">100% secure transactions</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-1" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">24/7 Support</h3>
-              <p className="text-gray-600 text-sm">Dedicated customer service</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter Signup */}
-      <section className="py-16 bg-amber-50">
-        <div className="container mx-auto px-4 text-center max-w-3xl">
-          <h2 className={`${playfair.className} text-3xl font-bold mb-4 text-amber-900`}>
-            Join Our Craft Community
-          </h2>
-          <p className="mb-8 text-amber-800">
-            Subscribe to our newsletter for exclusive updates on new arrivals, artisan stories, and special offers.
-          </p>
-          <form
-            onSubmit={handleNewsletterSubmit}
-            className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto"
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={isAboutInView ? "visible" : "hidden"}
+            className="lg:w-2/3 space-y-2"
           >
-            <input
-              type="email"
-              name="email"
-              placeholder="Your email address"
-              className="flex-grow px-4 py-3 text-amber-700 rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
-              required
+            {content.map((line, index) => (
+              <motion.p
+                key={index}
+                variants={itemVariants}
+                className={`text-gray-800 leading-relaxed ${
+                  index === 0
+                    ? "text-2xl sm:text-3xl md:text-4xl font-light"
+                    : index <= 3
+                    ? "text-xl sm:text-2xl md:text-3xl font-light"
+                    : "text-base sm:text-lg md:text-xl text-gray-600"
+                }`}
+              >
+                {line}
+              </motion.p>
+            ))}
+
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={isAboutInView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+              transition={{ duration: 1, delay: 1.5 }}
+              className="mt-8 h-0.5 w-24 bg-gradient-to-r from-amber-500 to-transparent"
+              style={{ transformOrigin: "left" }}
             />
-            <button
-              type="submit"
-              className="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 shadow-md"
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Values Section - With Image Background and Icons */}
+      <section
+        ref={valuesSectionRef}
+        className="relative w-full py-20 px-6 sm:px-10 md:px-16 lg:px-24 overflow-hidden bg-white"
+      >
+        <div className="max-w-7xl mx-auto">
+          {/* Rounded image background container with margins */}
+          <motion.div 
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden mx-0 sm:mx-4 md:mx-8"
+            initial={{ opacity: 0, y: 50 }}
+            animate={isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            {/* Background Image - Only visible when scrolled to */}
+            <div className="absolute inset-0 w-full h-full">
+              <Image
+                src="/images/hero.jpg"
+                alt="Team values"
+                fill
+                className="object-cover"
+              />
+              {/* Dark overlay for text readability */}
+              <div className="absolute inset-0 bg-black/50" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 px-6 sm:px-10 md:px-16 lg:px-20 py-16 md:py-20 lg:py-24">
+              <div className="max-w-4xl mx-auto">
+                {/* Icons Row */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="flex flex-wrap items-center gap-6 sm:gap-8 md:gap-10 mb-6"
+                >
+                  {valueIcons.map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={isValuesInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                        className="flex flex-col items-center"
+                      >
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300">
+                          <Icon size={28} className="text-white" />
+                        </div>
+                        <span className="text-xs text-white/60 mt-1">{item.label}</span>
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+
+                {/* Values Text */}
+                <motion.div
+                  variants={valuesContainerVariants}
+                  initial="hidden"
+                  animate={isValuesInView ? "visible" : "hidden"}
+                  className="space-y-1"
+                >
+                  {valuesContent.map((line, index) => (
+                    <motion.p
+                      key={index}
+                      variants={valuesItemVariants}
+                      className="text-xl sm:text-2xl md:text-3xl font-light text-white leading-relaxed"
+                    >
+                      {line}
+                    </motion.p>
+                  ))}
+                </motion.div>
+
+                {/* Founder Info */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                  className="mt-8"
+                >
+                  <p className="text-lg sm:text-xl font-medium text-white">
+                    Charles Ashimwe · <span className="font-light text-white/70">Founder & Director</span>
+                  </p>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Services Section - With dark background */}
+      <section
+        ref={servicesSectionRef}
+        className="relative w-full min-h-screen py-20 px-6 sm:px-10 md:px-16 lg:px-24 overflow-hidden"
+        style={{ backgroundColor: '#1a1a1a' }}
+      >
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 30% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)`,
+          }} />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+          {/* Title */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-2"
+          >
+            Home of the services we offer
+          </motion.h2>
+
+          {/* Right Content - Slides in from right */}
+          <motion.div
+            variants={servicesContainerVariants}
+            initial="hidden"
+            animate={isServicesInView ? "visible" : "hidden"}
+            className="mb-12"
+          >
+            <motion.p
+              variants={servicesItemVariants}
+              className="text-xl sm:text-2xl md:text-3xl font-light text-white/80"
             >
-              Subscribe
-            </button>
-          </form>
+              {rightContent[0]}
+            </motion.p>
+            <motion.p
+              variants={servicesItemVariants}
+              className="text-sm sm:text-base md:text-lg text-white/60 max-w-2xl mt-2 leading-relaxed"
+            >
+              {rightContent[1]}
+            </motion.p>
+          </motion.div>
+
+          {/* Services List - Hover to expand */}
+          <div className="space-y-4">
+            {services.map((service, index) => {
+              const isExpanded = expandedId === service.id;
+              const isHovered = hoveredId === service.id;
+
+              return (
+                <div
+                  key={service.id}
+                  className="border-b border-white/10 last:border-0"
+                  onMouseEnter={() => handleMouseEnter(service.id)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <motion.button
+                    className="w-full flex items-center justify-between py-4 md:py-5 group cursor-pointer"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                  >
+                    <div className="flex items-center gap-4 md:gap-6">
+                      <span className="text-sm md:text-base font-light text-white/40">
+                        {service.number}
+                      </span>
+                      <span className="text-lg md:text-xl font-medium text-white group-hover:text-amber-400 transition-colors">
+                        {service.title}
+                      </span>
+                      <span className="text-xs text-white/40 bg-white/10 px-2 py-0.5 rounded-full">
+                        {service.category}
+                      </span>
+                    </div>
+
+                    <motion.div
+                      animate={{
+                        rotate: isExpanded ? 180 : (isHovered ? -90 : 0),
+                      }}
+                      transition={{ duration: 0.3 }}
+                      className="text-white/40 group-hover:text-amber-400 transition-colors"
+                    >
+                      <ChevronDown
+                        size={24}
+                        className={`transition-transform duration-300 ${
+                          isExpanded ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </motion.div>
+                  </motion.button>
+
+                  {/* Dropdown Content - Opens on hover */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.4, ease: 'easeInOut' }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pb-6 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                          {/* Description - Left */}
+                          <div className="flex flex-col justify-center">
+                            <h4 className="text-lg md:text-xl font-semibold text-white mb-2">
+                              {service.title}
+                            </h4>
+                            <p className="text-sm md:text-base text-white/70 leading-relaxed">
+                              {service.description}
+                            </p>
+                          </div>
+
+                          {/* Image - Right */}
+                          <div className="relative w-full h-48 md:h-64 rounded-lg overflow-hidden bg-gray-800">
+                            <Image
+                              src={service.image}
+                              alt={service.title}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
