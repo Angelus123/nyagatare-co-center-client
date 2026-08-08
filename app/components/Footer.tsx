@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
               </div>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed">
-              Innovating life in rural Africa — creating jobs for the youth and women through hospitality, arts & crafts, and farming.
+              Innovating life in rural Africa, creating jobs for the youth and women through hospitality, arts & crafts, and farming.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
