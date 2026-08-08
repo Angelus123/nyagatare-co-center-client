@@ -19,6 +19,11 @@
 
 # production
 /build
+.next/
+dist/
+build/
+.env
+.env.*
 
 # misc
 .DS_Store

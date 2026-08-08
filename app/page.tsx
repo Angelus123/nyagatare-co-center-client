@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Inter, Playfair_Display } from 'next/font/google';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, AnimatePresence, Variants } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Users, Target, Heart, Shield, Star } from 'lucide-react';
 import Header from './components/Header';
@@ -85,11 +85,11 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  
+
   const aboutSectionRef = useRef<HTMLElement>(null);
   const valuesSectionRef = useRef<HTMLElement>(null);
   const servicesSectionRef = useRef<HTMLElement>(null);
-  
+
   const isAboutInView = useInView(aboutSectionRef, { once: false, amount: 0.2 });
   const isValuesInView = useInView(valuesSectionRef, { once: false, amount: 0.2 });
   const isServicesInView = useInView(servicesSectionRef, { once: false, amount: 0.2 });
@@ -104,7 +104,7 @@ export default function Home() {
     "main areas: Hospitality, Arts & Crafts and Farming."
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -115,7 +115,7 @@ export default function Home() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, x: 80 },
     visible: {
       opacity: 1,
@@ -127,7 +127,7 @@ export default function Home() {
     },
   };
 
-  const logoVariants = {
+  const logoVariants: Variants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: {
       opacity: 1,
@@ -141,7 +141,7 @@ export default function Home() {
   };
 
   // Values animation variants - upward transition
-  const valuesContainerVariants = {
+  const valuesContainerVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
@@ -154,7 +154,7 @@ export default function Home() {
     },
   };
 
-  const valuesItemVariants = {
+  const valuesItemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
@@ -164,7 +164,7 @@ export default function Home() {
   };
 
   // Services animation variants
-  const servicesContainerVariants = {
+  const servicesContainerVariants: Variants = {
     hidden: { opacity: 0, x: 100 },
     visible: {
       opacity: 1,
@@ -177,7 +177,7 @@ export default function Home() {
     },
   };
 
-  const servicesItemVariants = {
+  const servicesItemVariants: Variants = {
     hidden: { opacity: 0, x: 80 },
     visible: {
       opacity: 1,
@@ -210,15 +210,13 @@ export default function Home() {
   return (
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
       {/* Sticky Header */}
-      <Header isScrolled={isScrolled} />
+      <Header />
 
       {/* Hero Section */}
       <Hero />
 
       {/* About Section - White Background */}
       <section
-      
-      
         ref={aboutSectionRef}
         className="relative w-full min-h-screen py-20 px-6 sm:px-10 md:px-16 lg:px-24 overflow-hidden bg-white"
       >
@@ -286,7 +284,7 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto">
           {/* Rounded image background container with margins */}
-          <motion.div 
+          <motion.div
             className="relative rounded-2xl sm:rounded-3xl overflow-hidden mx-0 sm:mx-4 md:mx-8"
             initial={{ opacity: 0, y: 50 }}
             animate={isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
