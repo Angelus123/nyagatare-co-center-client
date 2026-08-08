@@ -104,7 +104,7 @@ const ShoppingCartPage: React.FC = () => {
   if (cart.length === 0) {
     return (
       <div className={`${inter.className} min-h-screen bg-gray-50`}>
-        <Header isScrolled={isScrolled} />
+        <Header />
         <main className="flex justify-center items-center min-h-[70vh] px-4">
           <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
@@ -127,7 +127,7 @@ const ShoppingCartPage: React.FC = () => {
 
   return (
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
-      <Header isScrolled={isScrolled} />
+      <Header/>
       <main className={`${isScrolled ? 'pt-32' : 'pt-14'}`}>
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-3xl font-bold mb-6 text-gray-900">Shopping Cart</h1>

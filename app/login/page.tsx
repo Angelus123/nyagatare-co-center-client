@@ -92,7 +92,7 @@ export default function LoginPage() {
 
   return (
     <div className={`${inter.className} min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 flex flex-col`}>
-      <Header isScrolled={false} />
+      <Header />
 
       {/* Login Section */}
       <main className="flex flex-1 items-center justify-center px-4 py-8 lg:py-4">

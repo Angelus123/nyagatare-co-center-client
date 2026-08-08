@@ -61,14 +61,14 @@ const Footer: React.FC = () => {
               <div className="relative w-9 h-9 flex-shrink-0">
                 <Image
                   src="/logo-white.svg"
-                  alt="Bashana Companies"
+                  alt="INSIGHT Companies"
                   fill
                   className="object-contain"
                 />
               </div>
               <div className="leading-tight">
-                <p className={`${playfair.className} text-white text-lg tracking-wide`}>BASHANA</p>
-                <p className="text-white text-xs tracking-wide -mt-0.5">COMPANIES</p>
+                <p className={`${playfair.className} text-white text-lg tracking-wide`}>INSIGHT</p>
+                <p className="text-white text-xs tracking-wide -mt-0.5">Nyagatare Community  Center</p>
               </div>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed">
@@ -133,8 +133,8 @@ const Footer: React.FC = () => {
               <p>4F4C+C4J, Kayonza</p>
               <p>Nyagatare, Rwanda</p>
               <p>
-                <a href="mailto:hello@bashanacompanies.com" className="hover:text-white transition-colors duration-300">
-                  hello@bashanacompanies.com
+                <a href="mailto:hello@INSIGHTcompanies.com" className="hover:text-white transition-colors duration-300">
+                  hello@INSIGHTcompanies.com
                 </a>
               </p>
               <p>
@@ -148,7 +148,7 @@ const Footer: React.FC = () => {
 
         {/* Copyright */}
         <div className="border-t border-white/15 mt-12 pt-6 text-center text-sm text-white/50">
-          <p>© {new Date().getFullYear()} Bashana Companies. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} INSIGHT Companies. All rights reserved.</p>
         </div>
       </div>
     </footer>

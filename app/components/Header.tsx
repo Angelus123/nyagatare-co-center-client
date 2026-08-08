@@ -52,7 +52,7 @@ export default function Header() {
         {/* Logo / Brand */}
         <Link href="/" className="flex items-center gap-2">
           <div className="leading-tight hidden sm:block">
-            <p className="font-serif text-sm sm:text-base tracking-wide">BASHANA</p>
+            <p className="font-serif text-sm sm:text-base tracking-wide">INSIGHT</p>
             <p className="text-[9px] tracking-[0.15em] text-white/70">COMPANIES</p>
           </div>
         </Link>
@@ -106,7 +106,7 @@ export default function Header() {
                 <div className="relative w-10 h-10">
                   <Image
                     src="/logo-white.svg"
-                    alt="Bashana Companies"
+                    alt="INSIGHT Companies"
                     fill
                     className="object-contain"
                   />

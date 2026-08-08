@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Inter, Playfair_Display } from 'next/font/google';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Hero from '../components/Hero';
@@ -174,9 +174,9 @@ export default function Home() {
   };
 
   // Newsletter form handler
-  const handleNewsletterSubmit = (e: React.FormEvent<NewsletterForm>): void => {
+  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const email = e.currentTarget.elements.email.value;
+    const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement)?.value;
     if (email) {
       const successMsg = document.createElement('div');
       successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
@@ -214,7 +214,7 @@ export default function Home() {
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
 
       {/* Sticky Header */}
-      <Header isScrolled={isScrolled} />
+      <Header/>
 
       {/* Hero Section */}
       <Hero />

@@ -2,10 +2,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Inter, Playfair_Display } from 'next/font/google';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, AnimatePresence, type Variants } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Users, Target, Heart, Star,
-   Quote, ChevronDown, ChevronLeft, ChevronRight, RightIcon, Phone, Mail, 
+   Quote, ChevronDown, ChevronLeft, ChevronRight, Phone, Mail, 
    MapPin, Clock, MessageCircle, Send, X, Plus } from 'lucide-react';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -126,7 +126,7 @@ const valueIcons = [
 
 const galleryImages: GalleryImage[] = [
   { id: 'g1', src: '/images/basket.jpg', alt: 'Our team behind the counter', category: 'Team' },
-  { id: 'g2', src: '/images/jewerry.jpg', alt: 'Bashana guest house exterior', category: 'Interior' },
+  { id: 'g2', src: '/images/jewerry.jpg', alt: 'INSIGHT guest house exterior', category: 'Interior' },
   { id: 'g3', src: '/images/pottery.jpg', alt: 'Coffee bar and baristas', category: 'Coffee' },
   { id: 'g4', src: '/images/textiles.jpg', alt: 'Café interior and menu boards', category: 'Interior' },
   { id: 'g5', src: '/images/gallery-artist.jpg', alt: 'Local artist with gallery pieces', category: 'Art' },
@@ -208,7 +208,7 @@ function CircularLogo() {
         </defs>
         <text fill="#0b1f3a" fontSize="11" fontWeight="600" letterSpacing="2">
           <textPath href="#circlePath" startOffset="0%">
-            COMPANIES · BASHANA · COMPANIES · BASHANA ·
+            COMPANIES · INSIGHT · COMPANIES · INSIGHT ·
           </textPath>
         </text>
       </svg>
@@ -217,7 +217,7 @@ function CircularLogo() {
         <div className="relative w-14 h-14 sm:w-16 sm:h-16">
           <Image
             src="/logo-white.svg"
-            alt="Bashana Companies"
+            alt="INSIGHT Companies"
             fill
             className="object-contain"
           />
@@ -255,9 +255,9 @@ export default function Home() {
   const isServicesInView = useInView(servicesSectionRef, { once: false, amount: 0.2 });
 
  const storyParagraphs = [
-    "It started with the Nyagatare Community Center  a small space built to give young people and women in the area a place to learn, work, and gather. What began as a single room has grown into Bashana: a home for hospitality, arts & crafts, and farming, all rooted in the same community.",
+    "It started with the Nyagatare Community Center  a small space built to give young people and women in the area a place to learn, work, and gather. What began as a single room has grown into INSIGHT: a home for hospitality, arts & crafts, and farming, all rooted in the same community.",
     "Our mission is simple  create real, sustainable opportunities where they're needed most. Every guest house booking, every cup of coffee, every craft sold puts income directly back into the hands of local youth and women, funding training, tools, and new ventures across Rural Africa.",
-    "Bashana is led by Charles Ashimwe, Founder & Director, alongside a growing team who believe that lasting change happens when a community builds it for itself.",
+    "INSIGHT is led by Charles Ashimwe, Founder & Director, alongside a growing team who believe that lasting change happens when a community builds it for itself.",
   ];
 
   const toggleFaq = (id: string) => {
@@ -280,7 +280,7 @@ export default function Home() {
     }, 1000);
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -291,7 +291,7 @@ export default function Home() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, x: 100 },
     visible: {
       opacity: 1,
@@ -303,7 +303,7 @@ export default function Home() {
     },
   };
 
-  const logoVariants = {
+  const logoVariants: Variants = {
     hidden: { opacity: 0, y: 60 },
     visible: {
       opacity: 1,
@@ -316,7 +316,7 @@ export default function Home() {
     },
   };
 
-  const valuesContainerVariants = {
+  const valuesContainerVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
@@ -329,7 +329,7 @@ export default function Home() {
     },
   };
 
-  const valuesItemVariants = {
+  const valuesItemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
@@ -338,7 +338,7 @@ export default function Home() {
     },
   };
 
-  const servicesContainerVariants = {
+  const servicesContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -349,7 +349,7 @@ export default function Home() {
     },
   };
 
-  const servicesItemVariants = {
+  const servicesItemVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
@@ -358,7 +358,7 @@ export default function Home() {
     },
   };
 
-  const descriptionVariants = {
+  const descriptionVariants: Variants = {
     hidden: { opacity: 0, x: -40 },
     visible: {
       opacity: 1,
@@ -367,7 +367,7 @@ export default function Home() {
     },
   };
 
-  const galleryContainerVariants = {
+  const galleryContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -378,7 +378,7 @@ export default function Home() {
     },
   };
 
-  const galleryItemVariants = {
+  const galleryItemVariants: Variants = {
     hidden: { opacity: 0, y: 60 },
     visible: {
       opacity: 1,
@@ -489,7 +489,7 @@ export default function Home() {
               variants={itemVariants}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight text-[#0b1f3a] w-full"
             >
-              At Bashana, we are innovating life in{' '}
+              At INSIGHT, we are innovating life in{' '}
               <span className="text-[#993232] font-bold">Rural Africa – Creating jobs</span>{' '}
               for the youth and women
             </motion.p>
@@ -771,7 +771,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="text-sm sm:text-base text-[#0b1f3a] font-medium mb-4"
           >
-            Our visual collation of the Bashana experience
+            Our visual collation of the INSIGHT experience
           </motion.p>
 
           <motion.h2
@@ -1325,8 +1325,8 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-xs text-white/50 mb-0.5">Email</p>
-                    <a href="mailto:hello@bashanacompanies.com" className="text-sm font-medium text-white hover:text-[#c95c5c] transition-colors break-all">
-                      hello@bashanacompanies.com
+                    <a href="mailto:hello@INSIGHTcompanies.com" className="text-sm font-medium text-white hover:text-[#c95c5c] transition-colors break-all">
+                      hello@INSIGHTcompanies.com
                     </a>
                   </div>
                 </div>
