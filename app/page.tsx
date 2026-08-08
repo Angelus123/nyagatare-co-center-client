@@ -1,19 +1,37 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Inter, Playfair_Display } from 'next/font/google';
-import { motion, useInView, AnimatePresence, Variants } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Users, Target, Heart, Star,
-   Quote, ChevronDown, ChevronLeft, ChevronRight, Phone, Mail, 
-   MapPin, Clock, MessageCircle, Send, X, Plus } from 'lucide-react';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Hero from './components/Hero';
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { Inter, Playfair_Display } from "next/font/google";
+import { motion, useInView, AnimatePresence, Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowUpRight,
+  Users,
+  Target,
+  Heart,
+  Star,
+  Quote,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  MessageCircle,
+  Send,
+  X,
+  Plus,
+} from "lucide-react";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Hero from "./components/Hero";
 
-
-const inter = Inter({ subsets: ['latin'] });
-const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400', '700'] });
+const inter = Inter({ subsets: ["latin"] });
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 interface Service {
   id: string;
@@ -47,152 +65,191 @@ interface FAQItem {
 }
 const services: Service[] = [
   {
-    id: 'guest-house',
-    title: 'Guest House',
-    number: '01',
-    description: 'Comfortable and affordable accommodation with breathtaking views of the Rwandan countryside. Our guest house offers a peaceful retreat for travelers and business visitors alike, with clean, cozy rooms and warm hospitality.',
-    image: '/images/guest-house.jpg',
-    category: 'Accommodation',
+    id: "guest-house",
+    title: "Guest House",
+    number: "01",
+    description:
+      "Comfortable and affordable accommodation with breathtaking views of the Rwandan countryside. Our guest house offers a peaceful retreat for travelers and business visitors alike, with clean, cozy rooms and warm hospitality.",
+    image: "/images/guest-house/guest-house.jpg",
+    category: "Accommodation",
     highlights: [
-      'Ensuite double & twin rooms',
-      'Free Wi-Fi & breakfast included',
-      'Countryside & garden views',
+      "Ensuite double & twin rooms",
+      "Free Wi-Fi & breakfast included",
+      "Countryside & garden views",
     ],
   },
   {
-    id: 'cafe-restaurant',
-    title: 'Coffee & Breakfast',
-    number: '02',
-    description: "Start your day right with freshly brewed Rwandan coffee and a hearty breakfast in a cozy atmosphere. Our café also serves local dishes and international favorites throughout the day, all prepared with love.",
-    image: '/images/house2.jpg',
-    category: 'Café & Restaurant',
+    id: "cafe-restaurant",
+    title: "Coffee & Breakfast",
+    number: "02",
+    description:
+      "Start your day right with freshly brewed Rwandan coffee and a hearty breakfast in a cozy atmosphere. Our café also serves local dishes and international favorites throughout the day, all prepared with love.",
+    image: "/images/breakfast/breakfast-3.jpg",
+    category: "Café & Restaurant",
     highlights: [
-      'Locally roasted coffee & tea',
-      'Full breakfast menu from 6,000 RWF',
-      'Lunch & dinner: local + international dishes',
+      "Locally roasted coffee & tea",
+      "Full breakfast menu from 6,000 RWF",
+      "Lunch & dinner: local + international dishes",
     ],
   },
   {
-    id: 'events-meetings',
-    title: 'Events & Meeting Space',
-    number: '03',
-    description: "A flexible, well-equipped space for meetings, workshops, and small events. Whether it's a business retreat or a private celebration, our team helps you plan an experience your guests will remember.",
-    image: '/images/hero.jpg',
-    category: 'Events',
+    id: "events-meetings",
+    title: "Events & Meeting Space",
+    number: "03",
+    description:
+      "A flexible, well-equipped space for meetings, workshops, and small events. Whether it's a business retreat or a private celebration, our team helps you plan an experience your guests will remember.",
+    image: "/images/meetings/meetings-1.jpg",
+    category: "Events",
     highlights: [
-      'Meeting room seats up to 30 guests',
-      'Catering & AV equipment available',
-      'Ideal for retreats, workshops & celebrations',
+      "Meeting room seats up to 30 guests",
+      "Catering & AV equipment available",
+      "Ideal for retreats, workshops & celebrations",
     ],
   },
   {
-    id: 'art-gallery',
-    title: 'Art Gallery',
-    number: '04',
-    description: 'Showcasing local artists and traditional masterpieces. Our gallery features imigongo art, paintings, sculptures, and contemporary works from Rwandan artists.',
-    image: '/images/jewelry1.jpg',
-    category: 'Art',
+    id: "art-gallery",
+    title: "Art Gallery",
+    number: "04",
+    description:
+      "Showcasing local artists and traditional masterpieces. Our gallery features imigongo art, paintings, sculptures, and contemporary works from Rwandan artists.",
+    image: "/images/artworks/textiles.jpg",
+    category: "Art",
   },
   {
-    id: 'craft-shop',
-    title: 'Craft Shop',
-    number: '05',
-    description: 'Handmade crafts preserving cultural heritage. From woven baskets to pottery and jewelry, each piece tells a story of Rwandan craftsmanship and tradition.',
-    image: '/images/craft-shop.jpg',
-    category: 'Art',
-  },
-  {
-    id: 'farming',
-    title: 'Farming',
-    number: '06',
-    description: 'Sustainable agriculture empowering local communities. We practice eco-friendly farming methods and support local farmers with training and resources.',
-    image: '/images/farming.jpg',
-    category: 'Farming',
+    id: "craft-shop",
+    title: "Craft Shop",
+    number: "05",
+    description:
+      "Handmade crafts preserving cultural heritage. From woven baskets to pottery and jewelry, each piece tells a story of Rwandan craftsmanship and tradition.",
+    image: "/images/craft-shop/craft-shop.jpg",
+    category: "Art",
   },
 ];
 
 const valuesContent = [
   "Team work, Hard-work, innovation, Humility are",
   "some of our key values that keeps a healthy and",
-  "growing team"
+  "growing team",
 ];
 
 const valueIcons = [
-  { icon: Users, label: 'Teamwork' },
-  { icon: Target, label: 'Hard-work' },
-  { icon: Star, label: 'Innovation' },
-  { icon: Heart, label: 'Humility' },
+  { icon: Users, label: "Teamwork" },
+  { icon: Target, label: "Hard-work" },
+  { icon: Star, label: "Innovation" },
+  { icon: Heart, label: "Humility" },
 ];
 
 const galleryImages: GalleryImage[] = [
-  { id: 'g1', src: '/images/basket.jpg', alt: 'Our team behind the counter', category: 'Team' },
-  { id: 'g2', src: '/images/jewerry.jpg', alt: 'Bashana guest house exterior', category: 'Interior' },
-  { id: 'g3', src: '/images/pottery.jpg', alt: 'Coffee bar and baristas', category: 'Coffee' },
-  { id: 'g4', src: '/images/textiles.jpg', alt: 'Café interior and menu boards', category: 'Interior' },
-  { id: 'g5', src: '/images/gallery-artist.jpg', alt: 'Local artist with gallery pieces', category: 'Art' },
-  { id: 'g6', src: '/images/gallery-craft-shop.jpg', alt: 'Craft shop and market shelves', category: 'Craft Shop' },
+  {
+    id: "g1",
+    src: "/images/meetings/meetings-1.jpg",
+    alt: "Our team behind the counter",
+    category: "Team",
+  },
+  {
+    id: "g2",
+    src: "/images/guest-house/guest-house.jpg",
+    alt: "Bashana guest house exterior",
+    category: "Interior",
+  },
+  {
+    id: "g3",
+    src: "/images/breakfast/breakfast-3.jpg",
+    alt: "Coffee bar and baristas",
+    category: "Coffee",
+  },
+  {
+    id: "g4",
+    src: "/images/textiles.jpg",
+    alt: "Café interior and menu boards",
+    category: "Interior",
+  },
+  {
+    id: "g5",
+    src: "/images/artisans/artisan-1.jpg",
+    alt: "Local artist with gallery pieces",
+    category: "Art",
+  },
+  {
+    id: "g6",
+    src: "/images/craft-shop/craft-shop.jpg",
+    alt: "Craft shop and market shelves",
+    category: "Craft Shop",
+  },
 ];
 
 const testimonials: Testimonial[] = [
   {
-    id: 't1',
-    name: 'Aline Uwase',
-    role: 'Guest House Visitor',
-    quote: "The most peaceful stay I've had in Rwanda. The staff felt like family, and waking up to that countryside view every morning was unforgettable.",
+    id: "t1",
+    name: "Aline Uwase",
+    role: "Guest House Visitor",
+    quote:
+      "The most peaceful stay I've had in Rwanda. The staff felt like family, and waking up to that countryside view every morning was unforgettable.",
     rating: 5,
-    image: '/images/testimonial-1.jpg',
+    image: "/images/guests/aisha.jpg",
   },
   {
-    id: 't2',
-    name: 'James Mugisha',
-    role: 'Café Regular',
-    quote: 'Best coffee in Nyagatare, hands down. I come here every weekend for breakfast and the atmosphere never disappoints.',
+    id: "t2",
+    name: "James Mugisha",
+    role: "Café Regular",
+    quote:
+      "Best coffee in Nyagatare, hands down. I come here every weekend for breakfast and the atmosphere never disappoints.",
     rating: 5,
-    image: '/images/testimonial-2.jpg',
+    image: "/images/guests/lil.jpg",
   },
   {
-    id: 't3',
-    name: 'Sarah Kimani',
-    role: 'Corporate Retreat Organizer',
-    quote: 'We hosted our team retreat here and everything was seamless — great space, attentive staff, and delicious catering throughout.',
+    id: "t3",
+    name: "Sarah Kimani",
+    role: "Corporate Retreat Organizer",
+    quote:
+      "We hosted our team retreat here and everything was seamless,great space, attentive staff, and delicious catering throughout.",
     rating: 5,
-    image: '/images/testimonial-3.jpg',
+    image: "/images/guests/fatima.jpg",
   },
   {
-    id: 't4',
-    name: 'Eric Nshimiyimana',
-    role: 'Craft Shop Customer',
-    quote: 'Beautiful, authentic craftsmanship. I bought gifts for my whole family and every piece tells a story of real Rwandan artistry.',
+    id: "t4",
+    name: "Eric Nshimiyimana",
+    role: "Craft Shop Customer",
+    quote:
+      "Beautiful, authentic craftsmanship. I bought gifts for my whole family and every piece tells a story of real Rwandan artistry.",
     rating: 5,
-    image: '/images/testimonial-4.jpg',
+    image: "/images/guests/aisha.jpg",
   },
 ];
 
 const faqs: FAQItem[] = [
   {
-    id: 'faq1',
-    question: 'Do I need to book in advance for the guest house?',
-    answer: 'We recommend booking at least a few days ahead, especially during weekends and holiday seasons, to guarantee availability. You can reach us via WhatsApp, phone, or the contact form to check current availability and reserve your room.',
+    id: "faq1",
+    question: "Do I need to book in advance for the guest house?",
+    answer:
+      "We recommend booking at least a few days ahead, especially during weekends and holiday seasons, to guarantee availability. You can reach us via WhatsApp, phone, or the contact form to check current availability and reserve your room.",
   },
   {
-    id: 'faq2',
-    question: 'What time does the café open, and is breakfast included with a room booking?',
-    answer: 'Our café opens daily from 6am. Breakfast is included with guest house bookings and served each morning between 6am and 10am. Walk-in customers are also welcome for coffee, breakfast, lunch, and dinner throughout the day.',
+    id: "faq2",
+    question:
+      "What time does the café open, and is breakfast included with a room booking?",
+    answer:
+      "Our café opens daily from 6am. Breakfast is included with guest house bookings and served each morning between 6am and 10am. Walk-in customers are also welcome for coffee, breakfast, lunch, and dinner throughout the day.",
   },
   {
-    id: 'faq3',
-    question: 'Can I host a private event or meeting at Nyagatare Community Center?',
-    answer: 'Yes — our meeting and event space seats up to 30 guests and can be arranged for workshops, retreats, and private celebrations. Catering and basic AV equipment are available on request. Reach out to us directly to discuss your event details and pricing.',
+    id: "faq3",
+    question:
+      "Can I host a private event or meeting at Nyagatare Community Center?",
+    answer:
+      "Yes,our meeting and event space seats up to 30 guests and can be arranged for workshops, retreats, and private celebrations. Catering and basic AV equipment are available on request. Reach out to us directly to discuss your event details and pricing.",
   },
   {
-    id: 'faq4',
-    question: 'Are the crafts and art pieces available for purchase, and do you ship internationally?',
-    answer: "All pieces in our craft shop and art gallery are available for purchase on-site. At this time we don't offer international shipping directly, but we're happy to help coordinate delivery within Rwanda or connect you with local shipping partners for cross-border requests.",
+    id: "faq4",
+    question:
+      "Are the crafts and art pieces available for purchase, and do you ship internationally?",
+    answer:
+      "All pieces in our craft shop and art gallery are available for purchase on-site. At this time we don't offer international shipping directly, but we're happy to help coordinate delivery within Rwanda or connect you with local shipping partners for cross-border requests.",
   },
   {
-    id: 'faq5',
-    question: 'How can I get in touch or find your exact location?',
-    answer: "You can reach us via WhatsApp, phone, or email — all listed in our Contact section. Our exact location is available through the Google Maps pin on this site, or via our what3words-style location code: 4F4C+C4J, Kayonza.",
+    id: "faq5",
+    question: "How can I get in touch or find your exact location?",
+    answer:
+      "You can reach us via WhatsApp, phone, or email,all listed in our Contact section. Our exact location is available through the Google Maps pin on this site, or via our what3words-style location code: 4F4C+C4J, Kayonza.",
   },
 ];
 
@@ -207,11 +264,7 @@ function CircularLogo() {
           />
         </defs>
         <text fill="#0b1f3a" fontSize="11" fontWeight="600" letterSpacing="2.2">
-          <textPath
-            href="#circlePath"
-            startOffset="50%"
-            textAnchor="middle"
-          >
+          <textPath href="#circlePath" startOffset="50%" textAnchor="middle">
             INSIGHT · NYAGATARE · COMMUNITY · CENTER
           </textPath>
         </text>
@@ -233,7 +286,7 @@ function CircularLogo() {
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -242,45 +295,70 @@ export default function Home() {
   const valuesSectionRef = useRef<HTMLElement>(null);
   const servicesSectionRef = useRef<HTMLElement>(null);
   const gallerySectionRef = useRef<HTMLElement>(null);
-   const contactSectionRef = useRef<HTMLElement>(null);
+  const contactSectionRef = useRef<HTMLElement>(null);
   const testimonialsSectionRef = useRef<HTMLElement>(null);
   const faqSectionRef = useRef<HTMLElement>(null);
-  
-  
+
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const isGalleryInView = useInView(gallerySectionRef, { once: false, amount: 0.15 });
-  const isContactInView = useInView(contactSectionRef, { once: false, amount: 0.15 });
-  const isTestimonialsInView = useInView(testimonialsSectionRef, { once: false, amount: 0.2 });
+  const isGalleryInView = useInView(gallerySectionRef, {
+    once: false,
+    amount: 0.15,
+  });
+  const isContactInView = useInView(contactSectionRef, {
+    once: false,
+    amount: 0.15,
+  });
+  const isTestimonialsInView = useInView(testimonialsSectionRef, {
+    once: false,
+    amount: 0.2,
+  });
   const isFaqInView = useInView(faqSectionRef, { once: false, amount: 0.15 });
   const [openFaqId, setOpenFaqId] = useState<string | null>(faqs[0].id);
-  
-  const isAboutInView = useInView(aboutSectionRef, { once: false, amount: 0.2 });
-  const isValuesInView = useInView(valuesSectionRef, { once: false, amount: 0.2 });
-  const isServicesInView = useInView(servicesSectionRef, { once: false, amount: 0.2 });
 
- const storyParagraphs = [
-    "It started with the Nyagatare Community Center  a small space built to give young people and women in the area a place to learn, work, and gather. What began as a single room has grown into Bashana: a home for hospitality, arts & crafts, and farming, all rooted in the same community.",
-    "Our mission is simple  create real, sustainable opportunities where they're needed most. Every guest house booking, every cup of coffee, every craft sold puts income directly back into the hands of local youth and women, funding training, tools, and new ventures across Rural Africa.",
-    "Bashana is led by Charles Ashimwe, Founder & Director, alongside a growing team who believe that lasting change happens when a community builds it for itself.",
+  const isAboutInView = useInView(aboutSectionRef, {
+    once: false,
+    amount: 0.2,
+  });
+  const isValuesInView = useInView(valuesSectionRef, {
+    once: false,
+    amount: 0.2,
+  });
+  const isServicesInView = useInView(servicesSectionRef, {
+    once: false,
+    amount: 0.2,
+  });
+
+  const storyParagraphs = [
+    "It started with a simple idea,a warm, welcoming space in Nyagatare where locals and travelers alike could stop for good coffee, a proper breakfast, and a place to rest. What began as a single room has grown into the Nyagatare Community Center: a home for hospitality rooted in the identity of this community.",
+    "Our mission is simple,offer genuine hospitality that reflects where we come from. Every cup of coffee served, every breakfast plate, every night in our guest rooms is a chance to share the warmth and character of Nyagatare with the people who pass through it.",
+    "The Nyagatare Community Center is run by a team who believe that great hospitality starts with community,and that visitors should leave feeling like they've been welcomed, not just served.",
   ];
 
   const toggleFaq = (id: string) => {
     setOpenFaqId(openFaqId === id ? null : id);
   };
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [formStatus, setFormStatus] = useState<"idle" | "sending" | "sent">(
+    "idle",
+  );
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormStatus('sending');
+    setFormStatus("sending");
     // Replace with your actual submit logic (API route, email service, etc.)
     setTimeout(() => {
-      setFormStatus('sent');
-      setFormData({ name: '', email: '', message: '' });
+      setFormStatus("sent");
+      setFormData({ name: "", email: "", message: "" });
     }, 1000);
   };
 
@@ -407,35 +485,49 @@ export default function Home() {
 
   const rightContent = [
     "Hospitality, Art, Entertainment",
-    "Explore our work and engage with us though supporting our business or collaborating with us on our numerous ventures. Help us deliver more impact in Rural Africa."
+    "Explore our work and engage with us though supporting our business or collaborating with us on our numerous ventures. Help us deliver more impact in Rural Africa.",
   ];
 
   useEffect(() => {
     if (lightboxIndex === null) return;
 
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightboxIndex(null);
-      if (e.key === 'ArrowRight') {
-        setLightboxIndex((prev) => (prev === null ? null : (prev + 1) % galleryImages.length));
+      if (e.key === "Escape") setLightboxIndex(null);
+      if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) =>
+          prev === null ? null : (prev + 1) % galleryImages.length,
+        );
       }
-      if (e.key === 'ArrowLeft') {
-        setLightboxIndex((prev) => (prev === null ? null : (prev - 1 + galleryImages.length) % galleryImages.length));
+      if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) =>
+          prev === null
+            ? null
+            : (prev - 1 + galleryImages.length) % galleryImages.length,
+        );
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [lightboxIndex]);
 
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
-  const nextImage = () => setLightboxIndex((prev) => (prev === null ? null : (prev + 1) % galleryImages.length));
-  const prevImage = () => setLightboxIndex((prev) => (prev === null ? null : (prev - 1 + galleryImages.length) % galleryImages.length));
+  const nextImage = () =>
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev + 1) % galleryImages.length,
+    );
+  const prevImage = () =>
+    setLightboxIndex((prev) =>
+      prev === null
+        ? null
+        : (prev - 1 + galleryImages.length) % galleryImages.length,
+    );
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -448,19 +540,20 @@ export default function Home() {
   };
 
   const prevTestimonial = () => {
-    setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setActiveTestimonial(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
+    );
   };
   return (
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
       <Header />
       <Hero />
-      
 
       {/* About Section */}
       <section
-  ref={aboutSectionRef}
-  className="relative w-full py-20 pb-10 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden bg-white"
->
+        ref={aboutSectionRef}
+        className="relative w-full py-20 pb-10 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden bg-white"
+      >
         <h3 className="text-sm sm:text-base md:text-lg mb-7 font-medium">
           <span className="text-[#0b1f3a]">Hello, welcome to life in </span>
           <span className="text-[#993232]">rural Africa.</span>
@@ -495,9 +588,11 @@ export default function Home() {
               variants={itemVariants}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight text-[#0b1f3a] w-full"
             >
-              At Insight, we are innovating life in{' '}
-              <span className="text-[#993232] font-bold">Rural Africa – Creating jobs</span>{' '}
-              for the youth and women
+              At Nyagatare Community Center, we&apos;re serving{" "}
+              <span className="text-[#993232] font-bold">
+                great coffee and warm hospitality
+              </span>{" "}
+              rooted in the heart of our community
             </motion.p>
 
             <div className="space-y-4">
@@ -514,7 +609,11 @@ export default function Home() {
 
             <motion.div
               initial={{ scaleX: 0, opacity: 0 }}
-              animate={isAboutInView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+              animate={
+                isAboutInView
+                  ? { scaleX: 1, opacity: 1 }
+                  : { scaleX: 0, opacity: 0 }
+              }
               transition={{ duration: 1, delay: 1.5 }}
               className="mt-8 h-0.5 w-24 bg-gradient-to-r from-[#993232] to-transparent"
               style={{ transformOrigin: "left" }}
@@ -524,15 +623,17 @@ export default function Home() {
       </section>
 
       {/* Values Section */}
-    <section
-  ref={valuesSectionRef}
-  className="relative w-full pt-10 pb-20 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden bg-white"
->
+      <section
+        ref={valuesSectionRef}
+        className="relative w-full pt-10 pb-20 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden bg-white"
+      >
         <div className="w-full">
           <motion.div
             className="relative rounded-2xl sm:rounded-3xl overflow-hidden mx-0 sm:mx-4 md:mx-8"
             initial={{ opacity: 0, y: 50 }}
-            animate={isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            animate={
+              isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
+            }
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="absolute inset-0 w-full h-full">
@@ -550,7 +651,11 @@ export default function Home() {
               <div className="max-w-4xl mx-auto">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
-                  animate={isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                  animate={
+                    isValuesInView
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 30 }
+                  }
                   transition={{ duration: 0.6, delay: 0.2 }}
                   className="flex flex-wrap items-center gap-6 sm:gap-8 md:gap-10 mb-6"
                 >
@@ -560,14 +665,20 @@ export default function Home() {
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, scale: 0.8 }}
-                        animate={isValuesInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                        animate={
+                          isValuesInView
+                            ? { opacity: 1, scale: 1 }
+                            : { opacity: 0, scale: 0.8 }
+                        }
                         transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
                         className="flex flex-col items-center"
                       >
                         <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors duration-300">
                           <Icon size={28} className="text-white" />
                         </div>
-                        <span className="text-xs text-white/60 mt-1">{item.label}</span>
+                        <span className="text-xs text-white/60 mt-1">
+                          {item.label}
+                        </span>
                       </motion.div>
                     );
                   })}
@@ -592,12 +703,19 @@ export default function Home() {
 
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
-                  animate={isValuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                  animate={
+                    isValuesInView
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 30 }
+                  }
                   transition={{ duration: 0.6, delay: 0.8 }}
                   className="mt-8"
                 >
                   <p className="text-lg sm:text-xl font-medium text-white">
-                    Charles Ashimwe · <span className="font-light text-white/70">Founder & Director</span>
+                    Charles Ashimwe ·{" "}
+                    <span className="font-light text-white/70">
+                      Founder & Director
+                    </span>
                   </p>
                 </motion.div>
               </div>
@@ -610,7 +728,7 @@ export default function Home() {
       <section
         ref={servicesSectionRef}
         className="relative w-full min-h-screen py-20 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden"
-        style={{ backgroundColor: '#023047FA' }}
+        style={{ backgroundColor: "#023047FA" }}
       >
         <div className="absolute inset-0 opacity-20">
           <div
@@ -624,7 +742,9 @@ export default function Home() {
         <div className="relative z-10 w-full">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
-            animate={isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6 }}
             className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-2"
           >
@@ -633,7 +753,9 @@ export default function Home() {
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-12"
           >
@@ -684,9 +806,9 @@ export default function Home() {
                     {isExpanded && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
+                        animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.4, ease: 'easeInOut' }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
                         <div className="pb-8 md:pb-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -706,8 +828,13 @@ export default function Home() {
                             {service.highlights && (
                               <ul className="mt-4 space-y-1.5">
                                 {service.highlights.map((h, i) => (
-                                  <li key={i} className="text-sm text-white/60 flex items-start gap-2">
-                                    <span className="text-[#c95c5c] mt-1">•</span>
+                                  <li
+                                    key={i}
+                                    className="text-sm text-white/60 flex items-start gap-2"
+                                  >
+                                    <span className="text-[#c95c5c] mt-1">
+                                      •
+                                    </span>
                                     <span>{h}</span>
                                   </li>
                                 ))}
@@ -736,7 +863,11 @@ export default function Home() {
                           <motion.div
                             initial={{ opacity: 0, x: 40 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+                            transition={{
+                              duration: 0.5,
+                              ease: "easeOut",
+                              delay: 0.1,
+                            }}
                             className="relative w-full h-48 md:h-64 rounded-lg overflow-hidden bg-gray-800"
                           >
                             <Image
@@ -773,7 +904,9 @@ export default function Home() {
         <div className="relative z-10 w-full">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.5 }}
             className="text-sm sm:text-base text-[#0b1f3a] font-medium mb-4"
           >
@@ -782,26 +915,37 @@ export default function Home() {
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
-            animate={isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight text-[#0b1f3a]"
           >
-            Explore our <span className="text-[#993232] font-bold">artistry</span> and commitment<br />
+            Explore our{" "}
+            <span className="text-[#993232] font-bold">artistry</span> and
+            commitment
+            <br />
             to <span className="text-[#993232] font-bold">excellence</span>
           </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-sm sm:text-base md:text-lg text-gray-600 mt-6 leading-relaxed"
           >
-            Embark on a visual journey through our cherished moments, each image reflecting our dedication <br /> to preserving & capturing rural Africa&apos;s beauty & significance.
+            Embark on a visual journey through our cherished moments, each image
+            reflecting our dedication <br /> to preserving & capturing rural
+            Africa&apos;s beauty & significance.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex items-center gap-4 mt-8"
           >
@@ -824,7 +968,11 @@ export default function Home() {
 
           <motion.div
             initial={{ scaleX: 0, opacity: 0 }}
-            animate={isGalleryInView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+            animate={
+              isGalleryInView
+                ? { scaleX: 1, opacity: 1 }
+                : { scaleX: 0, opacity: 0 }
+            }
             transition={{ duration: 1, delay: 0.5 }}
             className="mt-10 h-[2px] w-full bg-[#023047FA]"
             style={{ transformOrigin: "left" }}
@@ -837,7 +985,7 @@ export default function Home() {
             viewport={{ once: false, amount: 0.15 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mt-10"
           >
-           {galleryImages.map((image, index) => (
+            {galleryImages.map((image, index) => (
               <motion.div
                 key={image.id}
                 variants={galleryItemVariants}
@@ -864,7 +1012,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-       <AnimatePresence>
+      <AnimatePresence>
         {lightboxIndex !== null && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -941,23 +1089,30 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
-{/* Testimonials Section */}
+      {/* Testimonials Section */}
       <section
         ref={testimonialsSectionRef}
         className="relative w-full py-20 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden"
-        style={{ backgroundColor: '#023047FA' }}
+        style={{ backgroundColor: "#023047FA" }}
       >
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 70% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)`,
-          }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 70% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)`,
+            }}
+          />
         </div>
 
         <div className="relative z-10 w-full">
           {/* Header */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={isTestimonialsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isTestimonialsInView
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.5 }}
             className="text-sm sm:text-base text-white/60 font-medium mb-4"
           >
@@ -966,11 +1121,17 @@ export default function Home() {
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
-            animate={isTestimonialsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isTestimonialsInView
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl md:text-5xl font-light leading-tight text-white max-w-2xl"
           >
-            Stories from our <span className="text-[#c95c5c] font-bold">guests</span> and community
+            Stories from our{" "}
+            <span className="text-[#c95c5c] font-bold">guests</span> and
+            community
           </motion.h2>
 
           <div className="mt-14 max-w-4xl">
@@ -983,11 +1144,21 @@ export default function Home() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 sm:p-10 md:p-12"
               >
-                <Quote size={36} className="text-[#c95c5c] mb-6" strokeWidth={1.5} />
+                <Quote
+                  size={36}
+                  className="text-[#c95c5c] mb-6"
+                  strokeWidth={1.5}
+                />
 
                 <div className="flex items-center gap-1 mb-5">
-                  {Array.from({ length: testimonials[activeTestimonial].rating }).map((_, i) => (
-                    <Star key={i} size={16} className="fill-[#c95c5c] text-[#c95c5c]" />
+                  {Array.from({
+                    length: testimonials[activeTestimonial].rating,
+                  }).map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className="fill-[#c95c5c] text-[#c95c5c]"
+                    />
                   ))}
                 </div>
 
@@ -1026,7 +1197,9 @@ export default function Home() {
                     onClick={() => setActiveTestimonial(index)}
                     aria-label={`Go to testimonial ${index + 1}`}
                     className={`h-1.5 rounded-full transition-all duration-300 ${
-                      index === activeTestimonial ? 'w-8 bg-[#c95c5c]' : 'w-1.5 bg-white/20 hover:bg-white/40'
+                      index === activeTestimonial
+                        ? "w-8 bg-[#c95c5c]"
+                        : "w-1.5 bg-white/20 hover:bg-white/40"
                     }`}
                   />
                 ))}
@@ -1053,7 +1226,7 @@ export default function Home() {
         </div>
       </section>
 
-{/* FAQ Section */}
+      {/* FAQ Section */}
       <section
         ref={faqSectionRef}
         className="relative w-full py-20 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden bg-white"
@@ -1066,7 +1239,7 @@ export default function Home() {
           }}
         />
 
-       <div className="relative z-10 w-full">
+        <div className="relative z-10 w-full">
           {/* Header */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -1083,7 +1256,8 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight text-[#0b1f3a]"
           >
-            Answers to our most frequently asked<br />
+            Answers to our most frequently asked
+            <br />
             <span className="text-[#993232] font-bold">questions</span>
           </motion.h2>
 
@@ -1093,7 +1267,8 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-sm sm:text-base md:text-lg text-[#0b1f3a]/70 max-w-xl mt-6 leading-relaxed"
           >
-            Find quick answers to common questions about our services, process, and more.
+            Find quick answers to common questions about our services, process,
+            and more.
           </motion.p>
 
           {/* Get in touch button + arrow */}
@@ -1129,7 +1304,9 @@ export default function Home() {
                 <motion.div
                   key={faq.id}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={isFaqInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  animate={
+                    isFaqInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                  }
                   transition={{ duration: 0.5, delay: 0.1 * index }}
                 >
                   <button
@@ -1153,9 +1330,9 @@ export default function Home() {
                     {isOpen && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
+                        animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.35, ease: 'easeInOut' }}
+                        transition={{ duration: 0.35, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
                         <p className="text-sm sm:text-base text-gray-600 leading-relaxed pb-7 pr-12">
@@ -1167,7 +1344,7 @@ export default function Home() {
 
                   <div
                     className={`h-px w-full transition-colors duration-300 ${
-                      isOpen ? 'bg-[#993232]' : 'bg-[#0b1f3a]/30'
+                      isOpen ? "bg-[#993232]" : "bg-[#0b1f3a]/30"
                     }`}
                   />
                 </motion.div>
@@ -1177,25 +1354,30 @@ export default function Home() {
         </div>
       </section>
 
-     {/* Contact Section */}
+      {/* Contact Section */}
       {/* Contact Section */}
       <section
         ref={contactSectionRef}
         className="relative w-full py-20 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden"
-        style={{ backgroundColor: '#023047FA' }}
+        style={{ backgroundColor: "#023047FA" }}
       >
         {/* Subtle pattern overlay - matches Services/Testimonials */}
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 30% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)`,
-          }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 30% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)`,
+            }}
+          />
         </div>
 
         <div className="relative z-10 w-full">
           {/* Header */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.5 }}
             className="text-sm sm:text-base text-white/60 font-medium mb-4"
           >
@@ -1204,32 +1386,43 @@ export default function Home() {
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
-            animate={isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl md:text-5xl font-light leading-tight text-white max-w-3xl"
           >
-            Let&apos;s start a <span className="text-[#c95c5c] font-bold">conversation</span>
+            Let&apos;s start a{" "}
+            <span className="text-[#c95c5c] font-bold">conversation</span>
           </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isContactInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-sm sm:text-base md:text-lg text-white/60 max-w-xl mt-6 leading-relaxed"
           >
-            Have a question, booking request, or partnership idea? We&apos;d love to hear from you — reach out any way that works best.
+            Have a question, booking request, or partnership idea? We&apos;d
+            love to hear from you,reach out any way that works best.
           </motion.p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mt-14">
             {/* Left - Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: -40 }}
-              animate={isContactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -40 }}
+              animate={
+                isContactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -40 }
+              }
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
               <form onSubmit={handleFormSubmit} className="space-y-5">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-white/80 mb-2"
+                  >
                     Name
                   </label>
                   <input
@@ -1245,7 +1438,10 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-white/80 mb-2"
+                  >
                     Email
                   </label>
                   <input
@@ -1261,7 +1457,10 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-white/80 mb-2"
+                  >
                     Message
                   </label>
                   <textarea
@@ -1278,13 +1477,20 @@ export default function Home() {
 
                 <button
                   type="submit"
-                  disabled={formStatus === 'sending'}
+                  disabled={formStatus === "sending"}
                   className="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#993232] text-white text-sm md:text-base font-medium hover:bg-[#7a2828] transition-colors duration-300 disabled:opacity-60"
                 >
                   <span>
-                    {formStatus === 'sending' ? 'Sending...' : formStatus === 'sent' ? 'Message sent!' : 'Send message'}
+                    {formStatus === "sending"
+                      ? "Sending..."
+                      : formStatus === "sent"
+                        ? "Message sent!"
+                        : "Send message"}
                   </span>
-                  <Send size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
+                  <Send
+                    size={16}
+                    className="group-hover:translate-x-1 transition-transform duration-300"
+                  />
                 </button>
               </form>
             </motion.div>
@@ -1292,7 +1498,9 @@ export default function Home() {
             {/* Right - Map + Contact Details */}
             <motion.div
               initial={{ opacity: 0, x: 40 }}
-              animate={isContactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
+              animate={
+                isContactInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }
+              }
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
               className="space-y-6"
             >
@@ -1319,7 +1527,10 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-xs text-white/50 mb-0.5">Phone</p>
-                    <a href="tel:+250782073369" className="text-sm font-medium text-white hover:text-[#c95c5c] transition-colors">
+                    <a
+                      href="tel:+250782073369"
+                      className="text-sm font-medium text-white hover:text-[#c95c5c] transition-colors"
+                    >
                       +250 782 073 369
                     </a>
                   </div>
@@ -1331,7 +1542,10 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-xs text-white/50 mb-0.5">Email</p>
-                    <a href="mailto:hello@bashanacompanies.com" className="text-sm font-medium text-white hover:text-[#c95c5c] transition-colors break-all">
+                    <a
+                      href="mailto:hello@bashanacompanies.com"
+                      className="text-sm font-medium text-white hover:text-[#c95c5c] transition-colors break-all"
+                    >
                       hello@bashanacompanies.com
                     </a>
                   </div>
@@ -1343,7 +1557,9 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-xs text-white/50 mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-white">4F4C+C4J, Kayonza</p>
+                    <p className="text-sm font-medium text-white">
+                      4F4C+C4J, Kayonza
+                    </p>
                   </div>
                 </div>
 
@@ -1352,9 +1568,15 @@ export default function Home() {
                     <Clock size={18} className="text-[#c95c5c]" />
                   </div>
                   <div>
-                    <p className="text-xs text-white/50 mb-0.5">Business Hours</p>
-                    <p className="text-sm font-medium text-white">Mon–Sat: 7am – 9pm</p>
-                    <p className="text-sm font-medium text-white">Sun: 8am – 6pm</p>
+                    <p className="text-xs text-white/50 mb-0.5">
+                      Business Hours
+                    </p>
+                    <p className="text-sm font-medium text-white">
+                      Mon–Sat: 7am – 9pm
+                    </p>
+                    <p className="text-sm font-medium text-white">
+                      Sun: 8am – 6pm
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1371,18 +1593,24 @@ export default function Home() {
                     <MessageCircle size={22} className="text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">Chat with us on WhatsApp</p>
-                    <p className="text-xs text-white/50">Usually replies within a few hours</p>
+                    <p className="text-sm font-semibold text-white">
+                      Chat with us on WhatsApp
+                    </p>
+                    <p className="text-xs text-white/50">
+                      Usually replies within a few hours
+                    </p>
                   </div>
                 </div>
-                <ArrowUpRight size={20} className="text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                <ArrowUpRight
+                  size={20}
+                  className="text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300"
+                />
               </a>
             </motion.div>
           </div>
         </div>
       </section>
-        < Footer />
-
+      <Footer />
     </div>
   );
 }

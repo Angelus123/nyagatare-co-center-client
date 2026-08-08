@@ -67,12 +67,8 @@ export default function Header() {
 
           {/* Wordmark */}
           <div className="leading-tight hidden sm:block">
-            <p className="font-serif text-sm sm:text-base tracking-wide">
-              Insight
-            </p>
-            <p className="text-[9px] tracking-[0.15em] text-white/70">
-              Nyagatare Community Center
-            </p>
+            <p className={`text-white text-lg tracking-wide`}>INSIGHT</p>
+                <p className="text-white text-xs tracking-wide -mt-0.5">Nyagatare Community  Center</p>
           </div>
         </Link>
 
