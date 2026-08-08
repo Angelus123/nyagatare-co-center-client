@@ -24,83 +24,15 @@ const initialArtworks = [
     description: 'Intricately woven from natural fibers, perfect for storage or decor. This beautiful basket is crafted by skilled artisans using sustainable materials that are both durable and eco-friendly.',
     price: 45.99,
     image: '/images/artworks/basket.jpg',
+    category: 'home-decor', // add this
   },
   {
     id: 2,
     name: 'Ceramic Vase',
-    description: 'Hand-painted with traditional motifs, adds elegance to any space. Each vase is unique, featuring patterns passed down through generations of ceramic artists.',
+    description: '...',
     price: 59.99,
     image: '/images/artworks/TKX00217.jpg',
-  },
-  {
-    id: 3,
-    name: 'Wooden Sculpture',
-    description: 'Carved from sustainable wood, depicting cultural symbols. This sculpture represents the rich heritage and craftsmanship of local woodworkers.',
-    price: 89.99,
-    image: '/images/artworks/TKX00247.jpg',
-  },
-  {
-    id: 4,
-    name: 'Embroidered Textile',
-    description: 'Vibrant patterns hand-stitched by artisans. Each textile tells a story through its intricate designs and color combinations.',
-    price: 34.99,
-    image: '/images/artworks/textiles.jpg',
-  },
-  {
-    id: 5,
-    name: 'Beaded Jewelry Set',
-    description: 'Colorful beads in traditional designs, includes necklace and earrings. Made with natural stones and traditional beading techniques.',
-    price: 29.99,
-    image: '/images/artworks/jewelry.jpg',
-  },
-  {
-    id: 6,
-    name: 'Pottery Bowl',
-    description: 'Wheel-thrown and glazed with earthy tones. Each bowl is unique with its own character and finish.',
-    price: 24.99,
-    image: '/images/artworks/TKX00247.jpg',
-  },
-  {
-    id: 7,
-    name: 'Bamboo Lantern',
-    description: 'Eco-friendly lantern with intricate cutouts for ambient lighting. Creates beautiful patterns when lit.',
-    price: 39.99,
-    image: '/images/artworks/TKX00319.jpg',
-  },
-  {
-    id: 8,
-    name: 'Silk Scarf',
-    description: 'Hand-dyed silk with cultural prints, soft and luxurious. Lightweight and perfect for any occasion.',
-    price: 49.99,
-    image: '/images/artworks/TKX00247.jpg',
-  },
-  {
-    id: 9,
-    name: 'Metal Wall Art',
-    description: 'Hammered metal piece inspired by ancient craftsmanship. Adds a touch of elegance to any wall.',
-    price: 74.99,
-    image: '/images/artworks/TKX00310.jpg',
-  },
-  {
-    id: 10,
-    name: 'Leather Journal',
-    description: 'Hand-bound with embossed designs, ideal for writing or sketching. Features high-quality paper and durable binding.',
-    price: 32.99,
-    image: '/images/artworks/TKX00247.jpg',
-  },
-  {
-    id: 11,
-    name: 'Stone Carving',
-    description: 'Detailed sculpture from natural stone, a timeless piece. Showcases the natural beauty of the material.',
-    price: 99.99,
-    image: '/images/artworks/TKX09970.jpg',
-  },
-  {
-    id: 12,
-    name: 'Woven Rug',
-    description: 'Durable and colorful, hand-loomed from wool and cotton. Adds warmth and character to any room.',
-    price: 129.99,
-    image: '/images/artworks/woodwork.jpg',
+    category: 'ceramics', // add this
   },
 ];
 
@@ -215,31 +147,32 @@ const Shop: React.FC = () => {
     setShowDescription(!showDescription);
   };
 
-  const handleAddToCart = () => {
-    const currentProduct = artworksState[currentIndex];
-    if (quantity > currentProduct.stock) return;
+ const handleAddToCart = () => {
+  const currentProduct = artworksState[currentIndex];
+  if (quantity > currentProduct.stock) return;
 
-    setartworksState((prev) =>
-      prev.map((p, idx) =>
-        idx === currentIndex ? { ...p, stock: p.stock - quantity, sold: p.sold + quantity } : p
-      )
-    );
+  setartworksState((prev) =>
+    prev.map((p, idx) =>
+      idx === currentIndex ? { ...p, stock: p.stock - quantity, sold: p.sold + quantity } : p
+    )
+  );
 
-    addToCart(
-      {
-        id: currentProduct.id,
-        name: currentProduct.name,
-        price: currentProduct.price,
-        image: currentProduct.image,
-        description: currentProduct.description,
-      },
-      quantity
-    );
+  addToCart(
+    {
+      id: currentProduct.id,
+      name: currentProduct.name,
+      price: currentProduct.price,
+      image: currentProduct.image,
+      description: currentProduct.description,
+      category: currentProduct.category, // add this
+    },
+    quantity
+  );
 
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 3000);
-    setQuantity(1);
-  };
+  setAddedToCart(true);
+  setTimeout(() => setAddedToCart(false), 3000);
+  setQuantity(1);
+};
 
   const increaseQuantity = () => {
     const currentProduct = artworksState[currentIndex];

@@ -171,20 +171,21 @@ const Gallery: React.FC = () => {
   };
 
   const handleAddToCart = (product: Product) => {
-    addToCart(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        description: product.description,
-      },
-      1
-    );
+  addToCart(
+    {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      description: product.description,
+      category: product.category, // add this
+    },
+    1
+  );
 
-    setAddedToCart(product.id);
-    setTimeout(() => setAddedToCart(null), 3000);
-  };
+  setAddedToCart(product.id);
+  setTimeout(() => setAddedToCart(null), 3000);
+};
 
   const handleQuickAdd = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();

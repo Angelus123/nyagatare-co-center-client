@@ -48,9 +48,10 @@ const PayPalButtonWrapper = ({
   );
 };
 
+
 const CheckoutPage: React.FC = () => {
   const router = useRouter();
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
   const [checkoutItems, setCheckoutItems] = useState<CartItem[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [paypalClientId, setPaypalClientId] = useState('');
@@ -180,7 +181,6 @@ const CheckoutPage: React.FC = () => {
 
         // Save to localStorage in the correct format
         localStorage.setItem('lastOrder', JSON.stringify(orderData));
-        clearCart();
         localStorage.removeItem('checkoutItems');
         
         // Redirect to order success page instead of showing modal

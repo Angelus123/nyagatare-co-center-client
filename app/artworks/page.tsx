@@ -1,9 +1,10 @@
 'use client';
-import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Inter, Playfair_Display } from 'next/font/google';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { CartProvider } from '../context/CartContext';
 
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400', '700'] });
@@ -115,52 +116,6 @@ const artworks = [
     category: 'textiles',
   },
 ];
-
-// Cart Context for better state management
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-interface CartContextType {
-  cart: CartItem[];
-  addToCart: (product: Product, quantity: number) => void;
-  removeFromCart: (id: number) => void;
-}
-
-const CartContext = createContext<CartContextType | undefined>(undefined);
-
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error('useCart must be used within CartProvider');
-  return context;
-};
-
-const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-
-  const addToCart = (product: Product, qty: number) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id ? { ...item, quantity: item.quantity + qty } : item
-        );
-      }
-      return [...prev, { product, quantity: qty }];
-    });
-  };
-
-  const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.product.id !== id));
-  };
-
-  return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
-      {children}
-    </CartContext.Provider>
-  );
-};
 
 function Products() {
 

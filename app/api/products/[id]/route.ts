@@ -4,11 +4,10 @@ import { updateProduct, getProductById } from "@/services/productService";
 // GET: fetch a single product by ID
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } } | { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = await Promise.resolve(params);
-    const { id } = resolvedParams;
+    const { id } = await params;
 
     const product = await getProductById(id);
 
@@ -26,11 +25,10 @@ export async function GET(
 // PUT: update product by ID
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } } | { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = await Promise.resolve(params);
-    const { id } = resolvedParams;
+    const { id } = await params;
 
     const data = await req.json();
     const product = await updateProduct(id, data);

@@ -153,16 +153,18 @@ export default function Home() {
 
   // Basic cart functionality
   const handleAddToCart = (product: Product): void => {
-    addToCart(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        description: product.description,
-      },
-      1
-    );
+  addToCart(
+    {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      description: product.description,
+      category: product.category, // add this
+    },
+    1
+  );
+
     const notification = document.createElement('div');
     notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
     notification.textContent = `${product.name} added to cart!`;
