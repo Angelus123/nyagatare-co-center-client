@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
             <Link href="/" className="flex items-center gap-2">
               <div className="relative w-9 h-9 flex-shrink-0">
                 <Image
-                  src="/logo-white.svg"
+                  src="/images/logo/logo.png"
                   alt="INSIGHT Companies"
                   fill
                   className="object-contain"
