@@ -91,7 +91,7 @@ const Artisans: React.FC = () => {
   return (
     <div>
       {/* Sticky Header */}
-      <Header isScrolled={isScrolled} />
+      <Header />
       <section className="min-h-screen bg-amber-50 py-16">
         {/* Header tying back to Hero, Shop, and Categories style */}
         <div className="container mx-auto px-4 text-center mb-12">

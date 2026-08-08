@@ -141,7 +141,7 @@ const Categories: React.FC = () => {
 
   return (
     <div>
-      <Header isScrolled={isScrolled} />
+      <Header />
       <div className={`${inter.className} min-h-screen bg-gray-50 py-20`}>
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">

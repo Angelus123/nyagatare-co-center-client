@@ -256,7 +256,7 @@ const Shop: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-hidden">
-      <Header isScrolled={isScrolled} />
+      <Header />
       <section className="py-16 relative">
         {/* Clean Header */}
         <div className="container mx-auto px-4 text-center mb-12">

@@ -46,7 +46,7 @@ export default function ContactPage() {
 
     return (
         <div>
-            <Header isScrolled={isScrolled} />
+            <Header />
             <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 flex flex-col items-center justify-center px-4 py-10">
                 <motion.div
                     className="w-full max-w-3xl bg-white/70 backdrop-blur-md rounded-2xl shadow-lg p-6 sm:p-10"

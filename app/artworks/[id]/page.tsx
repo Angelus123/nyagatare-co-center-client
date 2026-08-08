@@ -367,13 +367,13 @@ const Product = () => {
   if (!product) {
     return (
       <div className="min-h-screen bg-amber-50">
-        <Header isScrolled={isScrolled} />
+        <Header />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <h1 className={`${playfair.className} text-4xl font-bold text-amber-900 mb-4`}>
               Product Not Found
             </h1>
-            <p className="text-amber-700 mb-8">The product you're looking for doesn't exist.</p>
+            <p className="text-amber-700 mb-8">The product you &apos;re looking for doesn&apos;t exist.</p>
             <Link 
               href="/artworks" 
               className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center gap-2"
@@ -394,7 +394,7 @@ const Product = () => {
 
   return (
     <div className="min-h-screen bg-amber-50">
-      <Header isScrolled={isScrolled} />
+      <Header/>
       
       {/* Success Notification */}
       <AnimatePresence>

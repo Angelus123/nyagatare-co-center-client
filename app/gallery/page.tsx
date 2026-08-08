@@ -213,7 +213,7 @@ const Gallery: React.FC = () => {
 
   return (
     <div>
-      <Header isScrolled={isScrolled} />
+      <Header />
       
       {/* Success Notification */}
       <AnimatePresence>

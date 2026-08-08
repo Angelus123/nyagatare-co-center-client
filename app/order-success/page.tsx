@@ -114,7 +114,7 @@ const OrderSuccessPage: React.FC = () => {
   if (!orderData) {
     return (
       <div className={`${inter.className} min-h-screen bg-gray-50`}>
-        <Header isScrolled={isScrolled} />
+        <Header />
         <main className="flex justify-center items-center min-h-[70vh] px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -145,7 +145,7 @@ const OrderSuccessPage: React.FC = () => {
 
   return (
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
-      <Header isScrolled={isScrolled} />
+      <Header />
 
       <main className={`${isScrolled ? 'pt-32' : 'pt-14'} transition-all`}>
         <div className="max-w-4xl mx-auto px-4 py-8">
