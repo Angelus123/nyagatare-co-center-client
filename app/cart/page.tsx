@@ -23,14 +23,14 @@ const ShoppingCartPage: React.FC = () => {
     setSelectedItems((prev) => {
       const newSelected = { ...prev };
       cart.forEach((item) => {
-        if (!(item.id in newSelected)) {
-          newSelected[item.id] = true;
+        if (!(item.product.id in newSelected)) {
+          newSelected[item.product.id] = true;
         }
       });
       // Remove deselected items not in cart
       Object.keys(newSelected).forEach((key) => {
         const numKey = Number(key);
-        if (!cart.some((i) => i.id === numKey)) {
+        if (!cart.some((i) => i.product.id === numKey)) {
           delete newSelected[numKey];
         }
       });
@@ -38,9 +38,9 @@ const ShoppingCartPage: React.FC = () => {
     });
   }, [cart]);
 
-  const selectedItemsData = cart.filter((item) => selectedItems[item.id]);
+  const selectedItemsData = cart.filter((item) => selectedItems[item.product.id]);
   const selectedQuantity = selectedItemsData.reduce((sum, item) => sum + item.quantity, 0);
-  const itemSubtotal = selectedItemsData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const itemSubtotal = selectedItemsData.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const subtotalExclTax = selectedQuantity > 0 ? itemSubtotal + shippingFee : 0;
   const isAllSelected = Object.keys(selectedItems).length === cart.length && Object.values(selectedItems).every(Boolean);
 
@@ -52,7 +52,7 @@ const ShoppingCartPage: React.FC = () => {
   }, []);
 
   const updateQuantity = (id: number, change: number) => {
-    const currentItem = cart.find((i) => i.id === id);
+    const currentItem = cart.find((i) => i.product.id === id);
     if (!currentItem) return;
     const newQuantity = currentItem.quantity + change;
     if (newQuantity <= 0) {
@@ -60,16 +60,7 @@ const ShoppingCartPage: React.FC = () => {
       setSelectedItems((prev) => ({ ...prev, [id]: false }));
       return;
     }
-    addToCart(
-      {
-        id: currentItem.id,
-        name: currentItem.name,
-        price: currentItem.price,
-        image: currentItem.image,
-        description: currentItem.description,
-      },
-      change
-    );
+    addToCart(currentItem.product, change);
   };
 
   const removeItem = (id: number) => {
@@ -80,7 +71,7 @@ const ShoppingCartPage: React.FC = () => {
   const toggleSelectAll = () => {
     const newState = !isAllSelected;
     const newSelected = cart.reduce(
-      (acc, item) => ({ ...acc, [item.id]: newState }),
+      (acc, item) => ({ ...acc, [item.product.id]: newState }),
       {} as Record<number, boolean>
     );
     setSelectedItems(newSelected);
@@ -92,7 +83,7 @@ const ShoppingCartPage: React.FC = () => {
 
   const handleProceedToCheckout = () => {
     if (selectedQuantity > 0) {
-      const selected = cart.filter((item) => selectedItems[item.id]);
+      const selected = cart.filter((item) => selectedItems[item.product.id]);
       localStorage.setItem('checkoutItems', JSON.stringify(selected));
       router.push('/checkout');
     }
@@ -111,7 +102,7 @@ const ShoppingCartPage: React.FC = () => {
               🛒
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Cart is Empty</h2>
-            <p className="text-gray-600 mb-6">Looks like you haven’t added anything to your cart yet.</p>
+            <p className="text-gray-600 mb-6">Looks like you haven&apos;t added anything to your cart yet.</p>
             <Link
               href="/shop"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
@@ -175,31 +166,31 @@ const ShoppingCartPage: React.FC = () => {
                 <div className="divide-y divide-gray-100">
                   {cart.map((item) => (
                     <div
-                      key={item.id}
+                      key={item.product.id}
                       className="p-4 flex items-start space-x-4 hover:bg-gray-50 transition-colors"
                     >
                       <input
                         type="checkbox"
-                        checked={selectedItems[item.id] || false}
-                        onChange={() => toggleSelectItem(item.id)}
+                        checked={selectedItems[item.product.id] || false}
+                        onChange={() => toggleSelectItem(item.product.id)}
                         className="w-5 h-5 text-blue-600 rounded mt-1 focus:ring-blue-500"
                       />
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={item.product.image}
+                        alt={item.product.name}
                         className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
                       />
                       <div className="flex-1">
                         <div className="flex justify-between">
                           <div>
-                            <h4 className="text-sm font-medium text-gray-800">{item.name}</h4>
-                            <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                            <h4 className="text-sm font-medium text-gray-800">{item.product.name}</h4>
+                            <p className="text-sm text-gray-600 mt-1">{item.product.description}</p>
                             <p className="text-sm font-medium text-gray-600 mt-1">
-                              {formatCurrency(item.price)} / piece
+                              {formatCurrency(item.product.price)} / piece
                             </p>
                           </div>
                           <button
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item.product.id)}
                             className="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors"
                             aria-label="Remove item"
                           >
@@ -211,7 +202,7 @@ const ShoppingCartPage: React.FC = () => {
                             <span className="text-sm text-gray-600">Quantity:</span>
                             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                               <button
-                                onClick={() => updateQuantity(item.id, -1)}
+                                onClick={() => updateQuantity(item.product.id, -1)}
                                 disabled={item.quantity <= 1}
                                 className="w-8 h-8 flex items-center justify-center text-gray-700 hover:bg-gray-100 disabled:text-gray-300 transition-colors"
                               >
@@ -221,7 +212,7 @@ const ShoppingCartPage: React.FC = () => {
                                 {item.quantity}
                               </span>
                               <button
-                                onClick={() => updateQuantity(item.id, 1)}
+                                onClick={() => updateQuantity(item.product.id, 1)}
                                 className="w-8 h-8 flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors"
                               >
                                 +
