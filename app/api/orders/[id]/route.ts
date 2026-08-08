@@ -4,11 +4,10 @@ import { updateOrder, getOrderById, deleteOrder } from "@/services/orderService"
 // GET: fetch a single order by ID
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } } | { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = await Promise.resolve(params);
-    const { id } = resolvedParams;
+    const { id } = await params;
 
     const order = await getOrderById(id);
 
@@ -26,11 +25,10 @@ export async function GET(
 // PUT: update order by ID
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } } | { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = await Promise.resolve(params);
-    const { id } = resolvedParams;
+    const { id } = await params;
 
     const data = await req.json();
     console.log("PUT data:", data);
@@ -46,11 +44,10 @@ export async function PUT(
 // DELETE: remove order by ID
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } } | { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = await Promise.resolve(params);
-    const { id } = resolvedParams;
+    const { id } = await params;
 
     const deletedOrder = await deleteOrder(id);
 
