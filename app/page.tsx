@@ -206,18 +206,22 @@ function CircularLogo() {
             d="M 100, 100 m -85, 0 a 85,85 0 1,1 170,0 a 85,85 0 1,1 -170,0"
           />
         </defs>
-        <text fill="#0b1f3a" fontSize="11" fontWeight="600" letterSpacing="2">
-          <textPath href="#circlePath" startOffset="0%">
-            COMPANIES · BASHANA · COMPANIES · BASHANA ·
+        <text fill="#0b1f3a" fontSize="11" fontWeight="600" letterSpacing="2.2">
+          <textPath
+            href="#circlePath"
+            startOffset="50%"
+            textAnchor="middle"
+          >
+            INSIGHT · NYAGATARE · COMMUNITY · CENTER
           </textPath>
         </text>
       </svg>
 
-      <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-[#7a2020] flex items-center justify-center">
-        <div className="relative w-14 h-14 sm:w-16 sm:h-16">
+      <div className="relative w-36 h-36 sm:w-40 sm:h-40 lg:w-44 lg:h-44 rounded-full bg-[#7a2020] flex items-center justify-center">
+        <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32">
           <Image
-            src="/logo-white.svg"
-            alt="Bashana Companies"
+            src="/images/logo/logo.png"
+            alt="Insight Nyagatare Community Center"
             fill
             className="object-contain"
           />
@@ -448,7 +452,9 @@ export default function Home() {
   };
   return (
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
+      <Header />
       <Hero />
+      
 
       {/* About Section */}
       <section
@@ -489,7 +495,7 @@ export default function Home() {
               variants={itemVariants}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight text-[#0b1f3a] w-full"
             >
-              At Bashana, we are innovating life in{' '}
+              At Insight, we are innovating life in{' '}
               <span className="text-[#993232] font-bold">Rural Africa – Creating jobs</span>{' '}
               for the youth and women
             </motion.p>
