@@ -93,7 +93,7 @@ export default function Hero() {
               Nyagatare Community Center
             </h1>
           <p className="mt-6 max-w-2xl text-xl sm:text-2xl md:text-3xl text-white/80 leading-relaxed">
-            Enhancing potential that lies in the Youth and <br /> women in Rural Africa
+           Coffee, breakfast, and a warm welcome <br /> rooted in local community
           </p>
         </div>
 
