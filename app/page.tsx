@@ -1558,7 +1558,7 @@ export default function Home() {
                   <div>
                     <p className="text-xs text-white/50 mb-0.5">Location</p>
                     <p className="text-sm font-medium text-white">
-                      4F4C+C4J, Kayonza
+                      4F4C+C4J, Nyagatare, Rwanda
                     </p>
                   </div>
                 </div>
