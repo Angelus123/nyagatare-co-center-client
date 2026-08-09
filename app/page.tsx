@@ -554,10 +554,10 @@ export default function Home() {
         ref={aboutSectionRef}
         className="relative w-full py-20 pb-10 px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 overflow-hidden bg-white"
       >
-        <h3 className="text-sm sm:text-base md:text-lg mb-7 font-medium">
+        {/* <h3 className="text-sm sm:text-base md:text-lg mb-7 font-medium">
           <span className="text-[#0b1f3a]">Hello, welcome to life in </span>
           <span className="text-[#993232]">rural Africa.</span>
-        </h3>
+        </h3> */}
 
         <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
           <div
